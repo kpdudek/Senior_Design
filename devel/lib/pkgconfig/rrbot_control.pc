@@ -1,0 +1,1 @@
+/home/kurt/Senior_Design/devel/.private/rrbot_control/lib/pkgconfig/rrbot_control.pc

@@ -1,0 +1,6 @@
+devel_space: /home/kurt/Senior_Design/devel
+install: false
+install_space: /home/kurt/Senior_Design/install
+profile: default
+source_space: /home/kurt/Senior_Design/src
+workspace: /home/kurt/Senior_Design

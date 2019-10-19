@@ -1,0 +1,4 @@
+Symlinking /home/kurt/Senior_Design/devel/lib/libgazebo_tutorials.so
+Symlinking /home/kurt/Senior_Design/devel/lib/pkgconfig/gazebo_tutorials.pc
+Symlinking /home/kurt/Senior_Design/devel/share/gazebo_tutorials/cmake/gazebo_tutorialsConfig-version.cmake
+Symlinking /home/kurt/Senior_Design/devel/share/gazebo_tutorials/cmake/gazebo_tutorialsConfig.cmake

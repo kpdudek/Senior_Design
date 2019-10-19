@@ -1,0 +1,4 @@
+[35m[1mScanning dependencies of target gazebo_tutorials[0m
+[ 50%] [32mBuilding CXX object CMakeFiles/gazebo_tutorials.dir/src/simple_world_plugin.cpp.o[0m
+[100%] [32m[1mLinking CXX shared library /home/kurt/Senior_Design/devel/.private/gazebo_tutorials/lib/libgazebo_tutorials.so[0m
+[100%] Built target gazebo_tutorials

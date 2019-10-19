@@ -1,0 +1,1 @@
+/home/kurt/Senior_Design/devel/.private/catkin_tools_prebuild/setup.bash

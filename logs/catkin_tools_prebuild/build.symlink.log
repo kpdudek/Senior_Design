@@ -1,0 +1,12 @@
+Symlinking /home/kurt/Senior_Design/devel/./setup.zsh
+Symlinking /home/kurt/Senior_Design/devel/./_setup_util.py
+Symlinking /home/kurt/Senior_Design/devel/./setup.bash
+Symlinking /home/kurt/Senior_Design/devel/./local_setup.bash
+Symlinking /home/kurt/Senior_Design/devel/./env.sh
+Symlinking /home/kurt/Senior_Design/devel/./local_setup.sh
+Symlinking /home/kurt/Senior_Design/devel/./local_setup.zsh
+Symlinking /home/kurt/Senior_Design/devel/./cmake.lock
+Symlinking /home/kurt/Senior_Design/devel/./setup.sh
+Symlinking /home/kurt/Senior_Design/devel/lib/pkgconfig/catkin_tools_prebuild.pc
+Symlinking /home/kurt/Senior_Design/devel/share/catkin_tools_prebuild/cmake/catkin_tools_prebuildConfig.cmake
+Symlinking /home/kurt/Senior_Design/devel/share/catkin_tools_prebuild/cmake/catkin_tools_prebuildConfig-version.cmake

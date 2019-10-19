@@ -1,0 +1,8 @@
+prefix=/home/kurt/Senior_Design/devel/.private/rrbot_control
+
+Name: rrbot_control
+Description: Description of rrbot_control
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/kurt/Senior_Design/devel/.private/rrbot_control/lib 
+Requires: 
