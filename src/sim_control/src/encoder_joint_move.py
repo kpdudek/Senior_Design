@@ -32,7 +32,7 @@ def main():
     j_sub = rospy.Subscriber('/Arduino/01/encoder1/val',Float64,encdrCB_1)
     j2_sub = rospy.Subscriber('/Arduino/01/encoder2/val',Float64,encdrCB_2)
 
-    rate = rospy.Rate(30)
+    rate = rospy.Rate(60)
 
     global J1, J2 , J1_prev, J2_prev
     J1 = Float64()

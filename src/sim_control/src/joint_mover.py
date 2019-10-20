@@ -5,9 +5,6 @@ from math import sin
 import numpy as np
 from std_msgs.msg import Float64
 
-def encdrCB_1(data):
-	
-
 def main():
 	rospy.init_node('Joint_Control', anonymous='True')
 
@@ -27,7 +24,7 @@ def main():
 
 		angle = sin(val)
 		val += speed
-		
+
 		x1.data = angle * amp
 		x2.data = -2*(angle * amp)
 
@@ -36,4 +33,4 @@ def main():
 		rate.sleep()
 
 if __name__ == "__main__":
-    main()
+	main()
