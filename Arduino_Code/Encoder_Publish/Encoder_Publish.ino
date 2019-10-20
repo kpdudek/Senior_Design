@@ -93,6 +93,8 @@ void loop()
   
   encdr_1.data = counter_1;
   encdr_2.data = counter_2;
+
+  // Publish at a designated frequency in milliseconds
   if ((t-t_old) > freq)
   {
     pub_encdr_1.publish(&encdr_1);
