@@ -1,5 +1,0 @@
-rrbot_gazebo
-/home/kurt/Senior_Design/devel/.private/rrbot_gazebo/cmake.lock /home/kurt/Senior_Design/devel/./cmake.lock
-/home/kurt/Senior_Design/devel/.private/rrbot_gazebo/lib/pkgconfig/rrbot_gazebo.pc /home/kurt/Senior_Design/devel/lib/pkgconfig/rrbot_gazebo.pc
-/home/kurt/Senior_Design/devel/.private/rrbot_gazebo/share/rrbot_gazebo/cmake/rrbot_gazeboConfig-version.cmake /home/kurt/Senior_Design/devel/share/rrbot_gazebo/cmake/rrbot_gazeboConfig-version.cmake
-/home/kurt/Senior_Design/devel/.private/rrbot_gazebo/share/rrbot_gazebo/cmake/rrbot_gazeboConfig.cmake /home/kurt/Senior_Design/devel/share/rrbot_gazebo/cmake/rrbot_gazeboConfig.cmake

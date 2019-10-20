@@ -1,5 +1,0 @@
-sim_control
-/home/kurt/Senior_Design/devel/.private/sim_control/cmake.lock /home/kurt/Senior_Design/devel/./cmake.lock
-/home/kurt/Senior_Design/devel/.private/sim_control/lib/pkgconfig/sim_control.pc /home/kurt/Senior_Design/devel/lib/pkgconfig/sim_control.pc
-/home/kurt/Senior_Design/devel/.private/sim_control/share/sim_control/cmake/sim_controlConfig.cmake /home/kurt/Senior_Design/devel/share/sim_control/cmake/sim_controlConfig.cmake
-/home/kurt/Senior_Design/devel/.private/sim_control/share/sim_control/cmake/sim_controlConfig-version.cmake /home/kurt/Senior_Design/devel/share/sim_control/cmake/sim_controlConfig-version.cmake
