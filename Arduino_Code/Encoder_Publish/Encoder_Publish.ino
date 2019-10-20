@@ -6,8 +6,8 @@
 ////////////////////////////////
 #define inputCLK_1 5 // encoder CLK pin
 #define inputDT_1 4  // encoder DT pin
-#define inputCLK_2 3 // encoder CLK pin
-#define inputDT_2 2  // encoder DT pin
+#define inputCLK_2 13 // encoder CLK pin
+#define inputDT_2 12  // encoder DT pin
 
 ////////////////////////////////
 // ROS Definitions
@@ -31,6 +31,8 @@ int currentStateCLK_2;
 int previousStateCLK_2; 
 String encdir_2 = "";
 
+unsigned long int t_old=0, t=0.0, freq = 1000/60;
+
 void setup()
 {
   nh.initNode();
@@ -46,6 +48,7 @@ void setup()
 
 void loop()
 {
+  t = millis();
   // Read the current state of inputCLK
   currentStateCLK_1 = digitalRead(inputCLK_1);
   currentStateCLK_2 = digitalRead(inputCLK_2);
@@ -90,8 +93,12 @@ void loop()
   
   encdr_1.data = counter_1;
   encdr_2.data = counter_2;
-  pub_encdr_1.publish(&encdr_1);
-  pub_encdr_2.publish(&encdr_2);
+  if ((t-t_old) > freq)
+  {
+    pub_encdr_1.publish(&encdr_1);
+    pub_encdr_2.publish(&encdr_2);
+    t_old = t;
+  }
   nh.spinOnce();
 }
 
