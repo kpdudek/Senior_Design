@@ -1,0 +1,1 @@
+/home/kurt/Senior_Design/devel/.private/sim_control/lib/pkgconfig/sim_control.pc

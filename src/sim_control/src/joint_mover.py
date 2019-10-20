@@ -5,12 +5,15 @@ from math import sin
 import numpy as np
 from std_msgs.msg import Float64
 
+def encdrCB_1(data):
+	
+
 def main():
 	rospy.init_node('Joint_Control', anonymous='True')
 
 	j_pub = rospy.Publisher('/rrbot/joint1_position_controller/command', Float64, queue_size = 1)
 	j2_pub = rospy.Publisher('/rrbot/joint2_position_controller/command', Float64, queue_size = 1)
-	
+
 	rate = rospy.Rate(30)
 
 	x1 = Float64()

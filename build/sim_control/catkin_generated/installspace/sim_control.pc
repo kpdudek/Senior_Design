@@ -1,0 +1,8 @@
+prefix=/home/kurt/Senior_Design/install
+
+Name: sim_control
+Description: Description of sim_control
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/kurt/Senior_Design/install/lib 
+Requires: 
