@@ -1,8 +1,0 @@
-prefix=/home/kurt/Senior_Design/devel/.private/rrbot_gazebo
-
-Name: rrbot_gazebo
-Description: Description of rrbot_gazebo
-Version: 0.1.0
-Cflags: 
-Libs: -L/home/kurt/Senior_Design/devel/.private/rrbot_gazebo/lib 
-Requires: 

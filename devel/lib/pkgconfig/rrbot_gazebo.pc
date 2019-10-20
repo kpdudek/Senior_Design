@@ -1,1 +1,0 @@
-/home/kurt/Senior_Design/devel/.private/rrbot_gazebo/lib/pkgconfig/rrbot_gazebo.pc
