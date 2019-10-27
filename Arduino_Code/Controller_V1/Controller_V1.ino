@@ -21,13 +21,13 @@ ros::NodeHandle  nh;
 //TODO: Switch to type INT
 
 std_msgs::Float64 encdr_1;
-ros::Publisher pub_encdr_1("/Arduino/01/encoder0/val", &encdr_1);
+ros::Publisher pub_encdr_1("/Arduino/01/encoder1/val", &encdr_1);
 std_msgs::Float64 encdr_2;
-ros::Publisher pub_encdr_2("/Arduino/01/encoder1/val", &encdr_2);
+ros::Publisher pub_encdr_2("/Arduino/01/encoder2/val", &encdr_2);
 std_msgs::Float64 encdr_3;
-ros::Publisher pub_encdr_3("/Arduino/01/encoder2/val", &encdr_3);
+ros::Publisher pub_encdr_3("/Arduino/01/encoder3/val", &encdr_3);
 std_msgs::Float64 encdr_4;
-ros::Publisher pub_encdr_4("/Arduino/01/encoder3/val", &encdr_4);
+ros::Publisher pub_encdr_4("/Arduino/01/encoder4/val", &encdr_4);
 
 ////////////////////////////////
 // Variable Definitions

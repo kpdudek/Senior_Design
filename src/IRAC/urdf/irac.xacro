@@ -21,7 +21,7 @@
   <!-- Used for fixing robot to Gazebo 'base_link' -->
   <link name="world"/>
 
-  <joint name="joint0" type="continuous">
+  <joint name="joint1" type="continuous">
     <parent link="world"/>
     <child link="link1"/>
     <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -56,7 +56,7 @@
     </inertial>
   </link>
 
-  <joint name="joint1" type="continuous">
+  <joint name="joint2" type="continuous">
     <parent link="link1"/>
     <child link="link2"/>
     <origin xyz="0 ${width} ${height1 - axel_offset}" rpy="0 0 0"/>
@@ -91,7 +91,7 @@
     </inertial>
   </link>
 
-  <joint name="joint2" type="continuous">
+  <joint name="joint3" type="continuous">
     <parent link="link2"/>
     <child link="link3"/>
     <origin xyz="0 ${width} ${height2 - axel_offset*2}" rpy="0 0 0"/>
@@ -126,7 +126,7 @@
     </inertial>
   </link>
 
-<joint name="joint3" type="continuous">
+<joint name="joint4" type="continuous">
     <parent link="link3"/>
     <child link="link4"/>
     <origin xyz="0 ${width} ${height3 - axel_offset*3}" rpy="0 0 0"/>
@@ -161,18 +161,6 @@
     </inertial>
   </link>
 
-
-  <transmission name="tran0">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="joint0">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="motor0">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-
   <transmission name="tran1">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="joint1">
@@ -201,6 +189,17 @@
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="motor3">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tran4">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint4">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor4">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
