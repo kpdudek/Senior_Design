@@ -1,14 +1,17 @@
-#define PUL 11
-#define DIR 12
-#define inputCLK_1 10 // encoder1 CLK pin
-#define inputDT_1 13 // encoder1 DT pin
+#define PUL 2
+#define DIR 3
+#define inputCLK_1 6 // encoder1 CLK pin
+#define inputDT_1 5 // encoder1 DT pin
 
 
-int counter_1 = 0, motorStep = 0;
+int counter_1 = 0, motorStep = 0,dir;
 float setAngle = 0.0, motorAngle = 0.0,error;
 int currentStateCLK_1;
 int previousStateCLK_1; 
 String encdir_1 = "";
+
+unsigned long int t_old=0, t=0.0;
+float freq = 700; // number of microseconds to wait between pulses
 
 void setup() {
   // put your setup code here, to run once:
@@ -19,43 +22,44 @@ void setup() {
   pinMode(inputDT_1,INPUT_PULLUP);
 
   previousStateCLK_1 = digitalRead(inputCLK_1);
-  //Serial.begin(9600);
 }
 
 void loop() {
   
   read_encdr_1();
   
-  setAngle = (counter_1 / 1200.0);
-  motorAngle = (motorStep / 800.0);  
-  
-//  Serial.print(setAngle);Serial.print("\t");
-//  Serial.print(motorAngle);Serial.print("\t");
+  setAngle = (counter_1 / 1200.0)*360;
+  motorAngle = (motorStep / 800.0)*360;  
   
   error = setAngle - motorAngle;
-  
+
+  // TODO: Add FLP check to make error equality account for the discretization
   if (error > 0)
   {
     digitalWrite(DIR,LOW);
-    stepp();
-    motorStep++;
+    dir = 1;
+    stepp(dir);
   }
   else if(error < 0)
   {
     digitalWrite(DIR,HIGH);
-    stepp();
-    motorStep--;
+    dir = -1;
+    stepp(dir);
   }
-  
-//  Serial.println();
 }
 
-void stepp()
+void stepp(int dir)
 {
-  digitalWrite(PUL,HIGH);
-  delayMicroseconds(100);
-  digitalWrite(PUL,LOW);
-  delayMicroseconds(100);
+  t = micros();
+  if ((t-t_old) > freq)
+  {
+    digitalWrite(PUL,HIGH);
+    delayMicroseconds(1);
+    digitalWrite(PUL,LOW);
+    delayMicroseconds(1);
+    t_old = t;
+    motorStep = motorStep + dir;
+  }
 }
 
 
