@@ -168,7 +168,6 @@
     <!-- <limit lower="${-PI/2}" upper="${PI/2}" effort="30.0" velocity="10.0"/> -->
   </joint>
 
-
   <!-- GAZEBO ROS CONTROL SPECIFIC INFORMATION -->
   <transmission name="tran1">
     <type>transmission_interface/SimpleTransmission</type>
