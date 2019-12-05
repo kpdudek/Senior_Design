@@ -6,7 +6,6 @@ from math import pi
 import numpy as np
 from std_msgs.msg import Float64
 from std_msgs.msg import Int16
-
 from datetime import datetime
 
 def getVal1(data):
