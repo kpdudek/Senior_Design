@@ -6,6 +6,7 @@ from math import pi
 import numpy as np
 from std_msgs.msg import Float64
 import threading
+import random
 
 class GetUserInput(threading.Thread):
     def __init__(self,move):
@@ -49,10 +50,10 @@ def main():
     j4.data = -pi/6
     val = pi
 
-    global move
-    move = False
-    inputThread = GetUserInput(move)
-    inputThread.start() 
+    # global move
+    # move = False
+    # inputThread = GetUserInput(move)
+    # inputThread.start() 
 
     while not rospy.is_shutdown():
         deltaT = .05
@@ -60,10 +61,23 @@ def main():
 
         # print(val)
         # print(move)
-        if move: 
-            j1.data = sin(val) * amp * pi
-            val += deltaT
+        # if move: 
+        j1.data = sin(val) * amp * pi
+        val += deltaT
 
+        j2.data = j2.data + (random.randint(-1,1) * random.random())
+        j3.data = j3.data + (random.randint(-1,1) * random.random())
+        j4.data = j4.data + (random.randint(-1,1) * random.random())
+
+        if j2.data > pi/2 or j2.data < -pi/2:
+            j2.data = pi/2 * np.sign(j2.data)
+         
+        if j3.data > pi/2 or j3.data < -pi/2:
+            j3.data = pi/2 * np.sign(j3.data)
+        
+        if j4.data > pi/2 or j4.data < -pi/2:
+            j4.data = pi/2 * np.sign(j4.data)
+        
         j1_pub.publish(j1)
         j2_pub.publish(j2)
         j3_pub.publish(j3)
