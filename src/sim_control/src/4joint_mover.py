@@ -23,7 +23,7 @@ def main():
 
 	val = 0
 	while not rospy.is_shutdown():
-		speed = .05
+		speed = .02
 		amp = 1
 
 
