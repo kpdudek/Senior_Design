@@ -22,10 +22,12 @@ def main():
     j3 = Float64()
     j4 = Float64()
 
+    angle = input("What angle to you want to go to (in radians): ")
+
     while not rospy.is_shutdown():
         t = time.time()
 
-        j1.data = 0
+        j1.data = angle
         j1_pub.publish(j1)
 
         time.sleep(.5)
