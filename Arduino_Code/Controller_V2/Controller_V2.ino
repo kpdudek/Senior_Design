@@ -1,6 +1,7 @@
 #include <ros.h>
 //#include <std_msgs/Float64.h>
-#include <std_msgs/Int16.h>
+//#include <std_msgs/Int16.h>
+#include <Teensy/Teensy_Pulses.h>
 #include <Encoder.h>
 
 ////////////////////////////////
@@ -18,8 +19,10 @@ ros::NodeHandle  nh;
 //TODO: Make custom message type with all four encoder values
 //TODO: Switch to type INT
 
-std_msgs::Int16 encdr_1;
-ros::Publisher pub_encdr_1("/Arduino/01/encoder1/val", &encdr_1);
+Teensy::Teensy_Pulses pulse_msg;
+ros::Publisher pub_pulses("/Teensy/encoders", &pulse_msg;)
+//std_msgs::Int16 encdr_1;
+//ros::Publisher pub_encdr_1("/Arduino/01/encoder1/val", &encdr_1);
 // std_msgs::Int16 encdr_2;
 // ros::Publisher pub_encdr_2("/Arduino/01/encoder2/val", &encdr_2);
 // std_msgs::Int16 encdr_3;
@@ -37,7 +40,8 @@ unsigned long int t_old=0, t=0.0, freq = 1000/60;
 void setup()
 {
   nh.initNode();
-  nh.advertise(pub_encdr_1);
+  nh.advertise(pub_pulses);
+  //nh.advertise(pub_encdr_1);
   // nh.advertise(pub_encdr_2);
   // nh.advertise(pub_encdr_3);
   // nh.advertise(pub_encdr_4);
@@ -51,10 +55,17 @@ void loop()
   if (newPosition != oldPosition) {
     oldPosition = newPosition;
     // Serial.println(newPosition);
-    encdr_1.data = newPosition;
+    pulse_msg.j1_pulses = newPosition;
+    // encdr_1.data = newPosition;
   }
 
-  
+     
+     pulse_msg.j2_pulses = 2;
+     pulse_msg.j3_pulses = 3;
+     pulse_msg.j4_pulses = 4;
+     pulse_msg.j5_pulses = 5;
+     pulse_msg.j6_pulses = 6;
+     
   // encdr_2.data = counter_2;
   // encdr_3.data = counter_3;
   // encdr_4.data = counter_4;
@@ -62,7 +73,8 @@ void loop()
   // Publish at a designated frequency in milliseconds
   if ((t-t_old) > freq)
   {
-    pub_encdr_1.publish(&encdr_1);
+    pub_pulses.publish(&pulse_msg);
+    // pub_encdr_1.publish(&encdr_1);
     // pub_encdr_2.publish(&encdr_2);
     // pub_encdr_3.publish(&encdr_3);
     // pub_encdr_4.publish(&encdr_4);
