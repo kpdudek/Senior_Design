@@ -25,7 +25,7 @@ def joyCallback(data):
     print([buttonA,buttonB])
 
     if buttonA == 1:
-        angle = angle + (pi/4)
+        angle = angle + (pi/20)
 
         if angle < 0:
             angle = (2*pi) + angle
@@ -36,7 +36,7 @@ def joyCallback(data):
         j1_pub.publish(j1)
 
     elif buttonB == 1:
-        angle = angle - (pi/4)
+        angle = angle - (pi/20)
 
         if angle < 0:
             angle = (2*pi) + angle

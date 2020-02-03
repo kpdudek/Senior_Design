@@ -6,30 +6,30 @@
 ///////////////////////////////////////////////
 //  Pin definitions and Variables
 ///////////////////////////////////////////////
-#define PI 3.14159
-
 #define joint1PUL 2
 #define joint1DIR 3
+#define eStopPin 4
+
+int ePinValue;
 
 unsigned long int t_old=0, t=0.0, freq = 100;
-int pulDelay = 300;
-float pulseRev = 800, angleTol = .01;
+int pulDelay = 50;
+
+double pulseRev = 800.0*50.0;
+double angleTol = 0.0005;
+double pi = 3.1415926;
 
 // Joint angle variables
-float joint1Angle = 0, joint1SetAngle = 0, joint1Error = 0;
+double joint1Angle = 0.0, joint1SetAngle = 0.0, joint1Error = 0.0;
 
 ////////////////////////////////
 // ROS Definitions
 ////////////////////////////////
 AR3::AR3_Debug joint1PubData;
-ros::Publisher joint1Pub("/AR3/joint1/debug", &joint1PubData);
+ros::Publisher joint1Pub("/AR3/Debug", &joint1PubData);
 
 void joint1Callback(const std_msgs::Float64& joint1_msg){
     joint1SetAngle = joint1_msg.data;// * 57.2957795;
-
-    // joint1PubData.data = joint1Angle;
-    // joint1PubData.data = joint1Error;
-    // joint1Pub.publish(&joint1PubData);
 }
 
 ros::NodeHandle  nh;
@@ -39,9 +39,9 @@ ros::Subscriber<std_msgs::Float64> joint1Sub("/rrbot/joint1_position_controller/
 //  Setup
 ///////////////////////////////////////////////
 void setup() {
-    // put your setup code here, to run once:
     pinMode(joint1PUL,OUTPUT);
     pinMode(joint1DIR,OUTPUT);
+    pinMode(eStopPin,INPUT_PULLUP);
 
     nh.initNode();
     nh.subscribe(joint1Sub);
@@ -52,44 +52,56 @@ void setup() {
 //  Main Loop
 ///////////////////////////////////////////////
 void loop() {
-    // TODO: calibration curve that goes from pulse time to rpm
-    t = millis();
+    ePinValue = digitalRead(eStopPin);
+    if (!ePinValue){
+        joint1PubData.eStop = 0;
+        // TODO: calibration curve that goes from pulse time to rpm
+        t = millis();
 
-    joint1Error = joint1SetAngle - joint1Angle;
-    // joint1Error = edgeAngle(joint1SetAngle,joint1Angle);
-    // Setpoint leads current
-    if(joint1Error > angleTol && joint1Error < PI){
-        sendPulse(joint1PUL,joint1DIR,0);
-        joint1Angle = joint1Angle + ((1.0/pulseRev)*(2*PI));
-    }
-    else if(joint1Error > angleTol){
-        sendPulse(joint1PUL,joint1DIR,1);
-        joint1Angle = joint1Angle - ((1.0/pulseRev)*(2*PI));
-    }
-    // Setpoint trails current
-    else if(joint1Error < -angleTol && joint1Error > -PI){
-        sendPulse(joint1PUL,joint1DIR,1);
-        joint1Angle = joint1Angle - ((1.0/pulseRev)*(2*PI));
-    }
-    else if(joint1Error < -angleTol){
-        sendPulse(joint1PUL,joint1DIR,0);
-        joint1Angle = joint1Angle + ((1.0/pulseRev)*(2*PI));
-    }
+        joint1Error = joint1SetAngle - joint1Angle;
+        // joint1Error = edgeAngle(joint1SetAngle,joint1Angle);
+        // Setpoint leads current
+        if(joint1Error > angleTol && joint1Error <= pi){
+            sendPulse(joint1PUL,joint1DIR,0);
+            joint1Angle = joint1Angle + ((1.0/pulseRev)*(2.0*pi));
+        }
+        else if(joint1Error > angleTol){
+            sendPulse(joint1PUL,joint1DIR,1);
+            joint1Angle = joint1Angle - ((1.0/pulseRev)*(2.0*pi));
+        }
+        // Setpoint trails current
+        else if(joint1Error < -angleTol && joint1Error >= -pi){
+            sendPulse(joint1PUL,joint1DIR,1);
+            joint1Angle = joint1Angle - ((1.0/pulseRev)*(2.0*pi));
+        }
+        else if(joint1Error < -angleTol){
+            sendPulse(joint1PUL,joint1DIR,0);
+            joint1Angle = joint1Angle + ((1.0/pulseRev)*(2.0*pi));
+        }
 
-    // Ensure angle in range 0 --> 360
-    if(joint1Angle >= (2*PI)){joint1Angle = joint1Angle - (2*PI);}
-    if(joint1Angle < 0){joint1Angle = (2*PI) + joint1Angle;}
+        // Ensure angle in range 0 --> 360
+        if(joint1Angle >= (2.0*pi)){joint1Angle = joint1Angle - (2.0*pi);}
+        if(joint1Angle < 0.0){joint1Angle = (2.0*pi) + joint1Angle;}
 
-    // Publish the arduinos current angle value for debugging purposes
-    // COMMENT OUT FOR SPEED IMPROVEMENT
-    if ((t-t_old) > (1500)){
+        // Publish the arduinos current angle value for debugging purposes
+        // COMMENT OUT FOR SPEED IMPROVEMENT
+        if ((t-t_old) > (2000)){
+            joint1PubData.j1_current_angle = joint1Angle;
+            joint1PubData.j1_setpoint_angle = joint1SetAngle;
+            joint1PubData.j1_angle_error = joint1Error;
+            joint1Pub.publish(&joint1PubData);
+            t_old = t;
+        }
+    }
+    else{
+        joint1PubData.eStop = 1;
         joint1PubData.j1_current_angle = joint1Angle;
         joint1PubData.j1_setpoint_angle = joint1SetAngle;
         joint1PubData.j1_angle_error = joint1Error;
         joint1Pub.publish(&joint1PubData);
-        t_old = t;
     }
-
+    
+    // Update subscribers
     nh.spinOnce();
 }
 
@@ -101,10 +113,10 @@ void loop() {
 ////////////////////////////////////////////////////////////
 void sendPulse(int pin, int dirPin, int dir) {
   if (dir == 1){
-    digitalWrite(dirPin,HIGH);
+    digitalWrite(dirPin,LOW);
   }
   else{
-    digitalWrite(dirPin,LOW);
+    digitalWrite(dirPin,HIGH);
   }
   
   digitalWrite(pin,HIGH);
