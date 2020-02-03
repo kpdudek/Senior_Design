@@ -1,3 +1,4 @@
+
 #include <ros.h>
 //#include <std_msgs/Float64.h>
 //#include <std_msgs/Int16.h>
@@ -20,7 +21,7 @@ ros::NodeHandle  nh;
 //TODO: Switch to type INT
 
 Teensy::Teensy_Pulses pulse_msg;
-ros::Publisher pub_pulses("/Teensy/encoders", &pulse_msg;)
+ros::Publisher pub_pulses("/Teensy/encoders", &pulse_msg);
 //std_msgs::Int16 encdr_1;
 //ros::Publisher pub_encdr_1("/Arduino/01/encoder1/val", &encdr_1);
 // std_msgs::Int16 encdr_2;
