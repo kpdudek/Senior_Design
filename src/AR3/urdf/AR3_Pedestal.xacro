@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!-- Revolute-Revolute Manipulator -->
+<robot name="AR3_Pedestal" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Constants for robot dimensions -->
+  <xacro:property name="PI" value="3.1415926535897931"/>
+  <xacro:property name="mass" value=".4" /> <!-- arbitrary value for mass -->
+  <xacro:property name="width" value="0.1" /> <!-- Square dimensions (widthxwidth) of beams -->
+  <xacro:property name="height1" value=".25" />
+  
+  <!-- Used for fixing robot to Gazebo 'base_link' -->
+  <link name="world"/>
+
+  <!-- Robot Stand -->
+  <link name="stand">
+      <collision>
+        <origin xyz="0 0 ${height1/2}" rpy="0 0 0"/>
+        <geometry>
+            <box size="${width} ${width} ${height1}"/>
+        </geometry>
+      </collision>
+      <visual>
+        <origin xyz="0 0 ${height1/2}" rpy="0 0 0"/>
+        <geometry>
+            <box size="${width} ${width} ${height1}"/>
+        </geometry>
+        <material name="orange"/>
+      </visual>
+      <inertial>
+        <origin xyz="0 0 ${height1/2}" rpy="0 0 0"/>
+        <mass value="${mass}"/>
+        <inertia
+          ixx="${mass / 12.0 * (width*width + height1*height1)}" ixy="0.0" ixz="0.0"
+          iyy="${mass / 12.0 * (height1*height1 + width*width)}" iyz="0.0"
+          izz="${mass / 12.0 * (width*width + width*width)}"/>
+      </inertial>
+    </link>
+
+  <!-- World to Stand -->
+  <joint name="BaseJoint" type="fixed">
+    <parent link="world"/>
+    <child link="stand"/>
+    <origin xyz="0 0 ${height1/2}" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <dynamics damping="0.7"/>
+    <!-- <limit lower="${-PI/2}" upper="${PI/2}" effort="30.0" velocity="10.0"/> -->
+  </joint>
+
+  <!-- Import all Gazebo-customization elements, including Gazebo colors -->
+  <xacro:include filename="$(find AR3)/urdf/AR3.xacro" />
+
+  <!-- Stand to Robot -->
+ <joint name="Stand_to_Robot" type="fixed">
+    <parent link="stand"/>
+    <child link="base"/>
+    <origin xyz="0 0 ${height1/2}" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <dynamics damping="0.7"/>
+  </joint>
+
+ 
+<!-- END OF ROBOT -->
+</robot>

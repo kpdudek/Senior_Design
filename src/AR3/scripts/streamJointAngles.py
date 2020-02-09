@@ -20,6 +20,7 @@ def main():
         eStop = 1
         j1Angle = 0.0
         rospy.init_node('Joint_Control', anonymous='True')
+        rate = rospy.Rate(30)
 
         j1_pub = rospy.Publisher('/rrbot/joint1_position_controller/command', Float64, queue_size = 1)
         j2_pub = rospy.Publisher('/rrbot/joint2_position_controller/command', Float64, queue_size = 1)
@@ -28,28 +29,23 @@ def main():
 
         AR3 = rospy.Subscriber("/AR3/Debug", AR3_Debug, AR3_Callback)
 
-        rate = rospy.Rate(30)
 
         j1 = Float64()
         j2 = Float64()
         j3 = Float64()
         j4 = Float64()
 
-        angles = [0,pi/2,pi,3*pi/2,2*pi]
+        angles = [0, pi/2, pi, 3*pi/2, 2*pi, 3*pi/2, pi, pi/2, 0]
         angleIdx = 0
         
         while not rospy.is_shutdown():
                 if eStop == 0:
                         if ((abs(j1Angle - angles[angleIdx]) < .005) and (angleIdx < len(angles)-1)):
-                                angleIdx = angleIdx + 1
-                                # time.sleep(1)
-                        
+                                angleIdx = angleIdx + 1                        
                         j1.data = angles[angleIdx]
-
                 j1_pub.publish(j1)
-
                 print('eStop: {} | Current Angle: {} | Setpoint: {}'.format(eStop,j1Angle,angles[angleIdx]))
-                
+
                 rate.sleep()
                 
 if __name__ == "__main__":

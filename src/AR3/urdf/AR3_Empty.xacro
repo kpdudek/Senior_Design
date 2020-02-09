@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!-- Revolute-Revolute Manipulator -->
+<robot name="AR3_Pedestal" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Constants for robot dimensions -->
+  <xacro:property name="PI" value="3.1415926535897931"/>
+  <xacro:property name="mass" value=".4" /> <!-- arbitrary value for mass -->
+  <xacro:property name="width" value="0.06" /> <!-- Square dimensions (widthxwidth) of beams -->
+  <xacro:property name="height1" value=".1397" /> <!-- Link 1 -->
+  <xacro:property name="height2" value="0.32476" /> <!-- Link 2 -->
+  <xacro:property name="height3" value="0.28416" /> <!-- Link 3 -->
+  
+  <!-- Used for fixing robot to Gazebo 'base_link' -->
+  <link name="world"/>
+
+  <!-- Import all Gazebo-customization elements, including Gazebo colors -->
+  <xacro:include filename="$(find AR3)/urdf/AR3.xacro" />
+
+  <!-- Robot to Environment-->
+  <joint name="BaseJoint" type="fixed">
+    <parent link="world"/>
+    <child link="base"/>
+    <origin xyz="0 0 1" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <dynamics damping="0.7"/>
+  </joint>
+ 
+<!-- END OF ROBOT -->
+</robot>
