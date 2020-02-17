@@ -39,14 +39,14 @@ unsigned long int t_old=0, t=0.0, t_old_accel = 0;
 double pulse1Rev = 1600.0*10.0*4.0; // pulse/rev, gearbox, pulley ratio
 double pulse2Rev = 3200.0*50.0; // pulse/rev, gearbox
 double pulse3Rev = 1600.0*50.0; // pulse/rev, gearbox
-double pulse4Rev = 1600.0*(13.0+(212.0/289.0))*2.0; // pulse/rev, gearbox, pulley ratio
+double pulse4Rev = 1600.0*(13.0+(212.0/289.0))*2.4893; // pulse/rev, gearbox, pulley ratio
 double pulse5Rev = 1/((8.0/1600.0)/(2.0*pi*13.675)); // pulse/rev, lead screw
 double pulse6Rev = 1600.0*(19.0+(38.0/187.0)); // pulse/rev, gearbox;
 
 // Pulse width of the signal sent to the stepper driver. This time is in microsecons
 // and is passed to the delay_microseconds() function. Making this value larger will
 // severely affect the frequency at which the main loop runs
-int pulDelay = 100; // default is 50 for max speed
+int pulDelay = 80; // default is 50 for max speed
 
 // Joint angle variables
 double joint1Angle = 0.0, joint1SetAngle = 0.0, joint1Error = 0.0;

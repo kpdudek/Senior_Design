@@ -61,12 +61,12 @@ def main():
         j5 = Float64()
         j6 = Float64()
 
-        angles_j1 = [0.0, pi/6.0, 0.0, 11.0*pi/6.0]
+        angles_j1 = [0.0, pi/2.0, 0.0, 3.0*pi/2.0]
         angles_j2 = [0.0, pi/6.0, 0.0, 11.0*pi/6.0]
-        angles_j3 = [0.0, pi/6.0, 0.0, 11.0*pi/6.0]
-        angles_j4 = [0.0, pi/6.0, 0.0, 11.0*pi/6.0]
-        angles_j5 = [0.0, pi/6.0, 0.0, 11.0*pi/6.0]
-        angles_j6 = [0.0, pi/6.0, 0.0, 11.0*pi/6.0]
+        angles_j3 = [0.0, pi/2.0, 0.0, 3.0*pi/2.0]
+        angles_j4 = [0.0, pi/2.0, 0.0, 3.0*pi/2.0]
+        angles_j5 = [0.0, pi/3.0, 0.0, 5.0*pi/3.0]
+        angles_j6 = [0.0, pi/2.0, 0.0, 3.0*pi/2.0]
 
         angleIdx = 0
         

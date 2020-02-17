@@ -4,7 +4,7 @@
 
   <!-- Constants for robot dimensions -->
   <xacro:property name="PI" value="3.1415926535897931"/>
-  <xacro:property name="mass" value="1" /> <!-- arbitrary value for mass -->
+  <xacro:property name="mass" value="1.5" /> <!-- arbitrary value for mass -->
   <xacro:property name="width" value="0.1" /> <!-- Square dimensions (widthxwidth) of beams -->
   <xacro:property name="height1" value=".1397" /> <!-- Link 1 -->
   <xacro:property name="height2" value="0.306" /> <!-- Link 2 -->
@@ -114,7 +114,7 @@
     <origin xyz="${joint1_x} ${joint1_y} ${joint1_z}" rpy="0 0 0"/>
     <axis xyz="0 0 1"/>
     <dynamics damping="0.7"/>
-    <!-- <limit lower="${-PI/2}" upper="${PI/2}" effort="30.0" velocity="10.0"/> -->
+    <limit lower="${-PI/2}" upper="${PI/2}" effort="30.0" velocity="10.0"/>
   </joint>
 
   <!-- Link 2 -->
@@ -152,7 +152,7 @@
     <origin xyz="${joint2_x} ${joint2_y} ${joint2_z}" rpy="0 0 0"/>
     <axis xyz="1 0 0"/>
     <dynamics damping="0.7"/>
-    <!-- <limit lower="${-PI/2}" upper="${PI/2}" effort="30.0" velocity="10.0"/> -->
+    <limit lower="${-PI/2}" upper="${PI}" effort="30.0" velocity="10.0"/>
   </joint>
 
   <!-- Link 3 -->
@@ -189,7 +189,7 @@
     <origin xyz="${joint3_x} ${joint3_y} ${joint3_z}" rpy="0 0 0"/>
     <axis xyz="1 0 0"/>
     <dynamics damping="0.7"/>
-    <!-- <limit lower="${-PI/2}" upper="${PI/2}" effort="30.0" velocity="10.0"/> -->
+    <limit lower="${-PI/2}" upper="${PI/2}" effort="30.0" velocity="10.0"/>
   </joint>
 
   <!-- LINK 4-->
@@ -226,7 +226,7 @@
     <origin xyz="${joint4_x} ${joint4_y} ${joint4_z}" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
     <dynamics damping="0.7"/>
-    <!-- <limit lower="${-PI/2}" upper="${PI/2}" effort="30.0" velocity="10.0"/> -->
+    <limit lower="${-PI/2}" upper="${PI/2}" effort="30.0" velocity="10.0"/>
   </joint>
 
   <!-- LINK 5-->
@@ -263,6 +263,7 @@
     <origin xyz="${joint5_x} ${joint5_y} ${joint5_z}" rpy="0 0 0"/>
     <axis xyz="1 0 0"/>
     <dynamics damping="0.7"/>
+    <limit lower="${-PI/2}" upper="${PI/2}" effort="30.0" velocity="10.0"/>
   </joint>
 
   <!-- LINK 6-->
