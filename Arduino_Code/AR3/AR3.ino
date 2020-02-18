@@ -25,6 +25,8 @@
 #define joint6PUL 32
 #define joint6DIR 33
 
+#define joint1LIM 2
+
 // E-Stop '+' pin. Must be grounded to work
 #define eStopPin 13
 
@@ -65,6 +67,11 @@ double accelTime = 0;
 
 // Current state of the e-stop pin. Default is True meaning no movements will occur
 int ePinValue = 1;
+int limState = 0;
+
+// States
+int home = 0;
+int run = 0;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ROS Definitions
@@ -156,7 +163,7 @@ void loop() {
     ePinValue = digitalRead(eStopPin);
     t = micros();
 
-    if (!ePinValue){
+    if (!ePinValue && run){
         jointPubData.eStop = 0;
         
         // Joint 2
@@ -207,6 +214,24 @@ void loop() {
             jointPub.publish(&jointPubData);
             t_old = t;
         }
+    }
+    else if(!ePinValue && !home){
+        home_joint(joint1PUL, joint1DIR, joint1LIM, &joint1Angle, 1, -pi/2, &home);
+
+        jointPubData.eStop = 1;
+        jointPubData.j1_current_angle = joint1Angle;
+        jointPubData.j1_setpoint_angle = joint1SetAngle;
+        jointPubData.j2_current_angle = joint2Angle;
+        jointPubData.j2_setpoint_angle = joint2SetAngle;
+        jointPubData.j3_current_angle = joint3Angle;
+        jointPubData.j3_setpoint_angle = joint3SetAngle;
+        jointPubData.j4_current_angle = joint4Angle;
+        jointPubData.j4_setpoint_angle = joint4SetAngle;
+        jointPubData.j5_current_angle = joint5Angle;
+        jointPubData.j5_setpoint_angle = joint5SetAngle;
+        jointPubData.j6_current_angle = joint6Angle;
+        jointPubData.j6_setpoint_angle = joint6SetAngle;
+        jointPub.publish(&jointPubData);
     }
     else{
         if ((t-t_old) > (2000000)){
@@ -280,4 +305,17 @@ void moveJoint(int pin, int dirPin, double* angle, double error, double pulRev) 
     // Ensure angle in range 0 --> 360
     if(*angle >= (2.0*pi)){*angle = *angle - (2.0*pi);}
     if(*angle < 0.0){*angle = (2.0*pi) + *angle;}
+}
+
+void home_joint(int pin, int dirPin, int limPin, double* angle, int dir, double setAngle){
+    int limState = digitalRead(limPin);
+    
+    if (!limState) {
+        sendPulse(pin,dirPin,dir);
+        delayMicroseconds(300);
+        limState = digitalRead(limPin);
+    }
+    else{
+        *angle = setAngle;
+    }
 }

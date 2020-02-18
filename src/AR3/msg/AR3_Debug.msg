@@ -1,20 +1,10 @@
 uint8 eStop
+uint8 homed
+uint8 resting
+uint8 running
 
-float64 j1_current_angle
-float64 j1_setpoint_angle
+float64[6] joint_angles
+float64[6] setpoint_angles
 
-float64 j2_current_angle
-float64 j2_setpoint_angle
 
-float64 j3_current_angle
-float64 j3_setpoint_angle
-
-float64 j4_current_angle
-float64 j4_setpoint_angle
-
-float64 j5_current_angle
-float64 j5_setpoint_angle
-
-float64 j6_current_angle
-float64 j6_setpoint_angle
 
