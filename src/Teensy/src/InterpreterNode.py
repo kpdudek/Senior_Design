@@ -11,34 +11,35 @@ from Teensy.msg import Teensy_Pulses
 global anglesPub
 global pulsesSub
 
-def pulseCallBack(data):
-   Teensy_Angles jointAngles
+def pulseCallback(data):
+  global anglesPub
+  jointAngles = Teensy_Angles()
 
-   jointAngles.j1_angle = j1_pulses / 2400 * 2 * pi
-   jointAngles.j2_angle = j2_pulses / 2400 * 2 * pi
-   jointAngles.j3_angle = j3_pulses / 2400 * 2 * pi
-   jointAngles.j4_angle = j4_pulses / 2400 * 2 * pi
-   jointAngles.j5_angle = j5_pulses / 2400 * 2 * pi
-   jointAngles.j6_angle = j6_pulses / 2400 * 2 * pi
+  jointAngles.j1_angle = data.j1_pulses / 2400 * 2 * pi
+  jointAngles.j2_angle = data.j2_pulses / 2400 * 2 * pi
+  jointAngles.j3_angle = data.j3_pulses / 2400 * 2 * pi
+  jointAngles.j4_angle = data.j4_pulses / 2400 * 2 * pi
+  jointAngles.j5_angle = data.j5_pulses / 2400 * 2 * pi
+  jointAngles.j6_angle = data.j6_pulses / 2400 * 2 * pi
 
-    anglesPub.publish(jointAngles)
+  anglesPub.publish(jointAngles)
 
 
 def main():
-    rospy.init_node('Interpreter_Node', anonymous='True')
+  global anglesPub
+  rospy.init_node('Interpreter_Node', anonymous='True')
 
-    anglesPub = rospy.Publisher('/Interpreter/Publisher/Angles',Teensy_Angles, queue_size = 1)
+  anglesPub = rospy.Publisher('/Interpreter/Publisher/Angles',Teensy_Angles, queue_size = 1)
 
-    pulsesSub = rospy.Subscriber('/Interpreter/Subscriber/Pulses', Teensy_Pulses, pulseCallback)
+  pulsesSub = rospy.Subscriber('/Teensy/encoders', Teensy_Pulses, pulseCallback)
 
-    rate = rospy.Rate(60)
+  rate = rospy.Rate(60)
 
-    while not rospy.is_shutdown():
-         rospy.spin()
-         rate.sleep()
+  while not rospy.is_shutdown():
+    rate.sleep()
 
 if __name__ == "__main__":
-    main()
+  main()
         
 
 
