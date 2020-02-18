@@ -11,30 +11,38 @@
 #define Enc1_Pin1 2 // encoder1 CLK pin
 #define Enc1_Pin2 3  // encoder1 DT pin
 
-Encoder myEnc(Enc1_Pin1, Enc1_Pin2);
+Encoder Enc1(Enc1_Pin1, Enc1_Pin2);
+
+#define Enc2_Pin1 4 // encoder2 CLK pin
+#define Enc2_Pin2 5  // encoder2 DT pin
+
+Encoder Enc2(Enc2_Pin1, Enc2_Pin2);
+
+#define Enc3_Pin1 6 // encoder3 CLK pin
+#define Enc3_Pin2 7  // encoder3 DT pin
+
+Encoder Enc3(Enc3_Pin1, Enc3_Pin2);
+
+#define Enc4_Pin1 8 // encoder4 CLK pin
+#define Enc4_Pin2 9  // encoder4 DT pin
+
+Encoder Enc4(Enc4_Pin1, Enc4_Pin2);
 
 ////////////////////////////////
 // ROS Definitions
 ////////////////////////////////
 ros::NodeHandle  nh;
-//TODO: Make custom message type with all four encoder values
-//TODO: Switch to type INT
 
 Teensy::Teensy_Pulses pulse_msg;
 ros::Publisher pub_pulses("/Teensy/encoders", &pulse_msg);
-//std_msgs::Int16 encdr_1;
-//ros::Publisher pub_encdr_1("/Arduino/01/encoder1/val", &encdr_1);
-// std_msgs::Int16 encdr_2;
-// ros::Publisher pub_encdr_2("/Arduino/01/encoder2/val", &encdr_2);
-// std_msgs::Int16 encdr_3;
-// ros::Publisher pub_encdr_3("/Arduino/01/encoder3/val", &encdr_3);
-// std_msgs::Int16 encdr_4;
-// ros::Publisher pub_encdr_4("/Arduino/01/encoder4/val", &encdr_4);
 
 ////////////////////////////////
 // Variable Definitions
 ////////////////////////////////
-long oldPosition  = -999;
+long oldPosition1  = -999;
+long oldPosition2  = -999;
+long oldPosition3  = -999;
+long oldPosition4  = -999;
 
 unsigned long int t_old=0, t=0.0, freq = 1000/60;
 
@@ -42,34 +50,38 @@ void setup()
 {
   nh.initNode();
   nh.advertise(pub_pulses);
-  //nh.advertise(pub_encdr_1);
-  // nh.advertise(pub_encdr_2);
-  // nh.advertise(pub_encdr_3);
-  // nh.advertise(pub_encdr_4);
 }
 
 void loop()
 {
   t = millis();
 
-  long newPosition = myEnc.read();
-  if (newPosition != oldPosition) {
-    oldPosition = newPosition;
-    // Serial.println(newPosition);
-    pulse_msg.j1_pulses = newPosition;
-    // encdr_1.data = newPosition;
+  long newPosition1 = Enc1.read();
+  if (newPosition1 != oldPosition1) {
+    oldPosition1 = newPosition1;
+    pulse_msg.j1_pulses = newPosition1;
   }
-
+  long newPosition2 = Enc2.read();
+  if (newPosition2 != oldPosition2) {
+    oldPosition2 = newPosition2;
+    pulse_msg.j2_pulses = newPosition2;
+  }
+  
+  long newPosition3 = Enc3.read();
+  if (newPosition3 != oldPosition3) {
+    oldPosition3 = newPosition3;
+    pulse_msg.j3_pulses = newPosition3;
+  }
+  
+  long newPosition4 = Enc4.read();
+  if (newPosition4 != oldPosition4) {
+    oldPosition4 = newPosition4;
+    pulse_msg.j4_pulses = newPosition4;
+  }
+  
+  pulse_msg.j5_pulses = 5;
+  pulse_msg.j6_pulses = 6;
      
-     pulse_msg.j2_pulses = 2;
-     pulse_msg.j3_pulses = 3;
-     pulse_msg.j4_pulses = 4;
-     pulse_msg.j5_pulses = 5;
-     pulse_msg.j6_pulses = 6;
-     
-  // encdr_2.data = counter_2;
-  // encdr_3.data = counter_3;
-  // encdr_4.data = counter_4;
 
   // Publish at a designated frequency in milliseconds
   if ((t-t_old) > freq)
