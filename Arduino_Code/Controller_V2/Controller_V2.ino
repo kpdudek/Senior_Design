@@ -59,38 +59,34 @@ void loop()
   long newPosition1 = Enc1.read();
   if (newPosition1 != oldPosition1) {
     oldPosition1 = newPosition1;
-    pulse_msg.j1_pulses = newPosition1;
+    pulse_msg.pulses[0] = newPosition1;
   }
   long newPosition2 = Enc2.read();
   if (newPosition2 != oldPosition2) {
     oldPosition2 = newPosition2;
-    pulse_msg.j2_pulses = newPosition2;
+    pulse_msg.pulses[1] = newPosition2;
   }
   
   long newPosition3 = Enc3.read();
   if (newPosition3 != oldPosition3) {
     oldPosition3 = newPosition3;
-    pulse_msg.j3_pulses = newPosition3;
+    pulse_msg.pulses[2] = newPosition3;
   }
   
   long newPosition4 = Enc4.read();
   if (newPosition4 != oldPosition4) {
     oldPosition4 = newPosition4;
-    pulse_msg.j4_pulses = newPosition4;
+    pulse_msg.pulses[3] = newPosition4;
   }
   
-  pulse_msg.j5_pulses = 5;
-  pulse_msg.j6_pulses = 6;
+  pulse_msg.pulses[4] = 5;
+  pulse_msg.pulses[5] = 6;
      
 
   // Publish at a designated frequency in milliseconds
   if ((t-t_old) > freq)
   {
     pub_pulses.publish(&pulse_msg);
-    // pub_encdr_1.publish(&encdr_1);
-    // pub_encdr_2.publish(&encdr_2);
-    // pub_encdr_3.publish(&encdr_3);
-    // pub_encdr_4.publish(&encdr_4);
     t_old = t;
   }
   nh.spinOnce();
