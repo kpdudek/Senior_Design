@@ -52,6 +52,7 @@ add_message_files(
    FILES
    Teensy_Angles.msg
    Teensy_Pulses.msg
+   AR3_Control.msg
 )
 
 ## Generate services in the 'srv' folder

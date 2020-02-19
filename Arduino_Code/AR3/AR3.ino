@@ -1,6 +1,7 @@
 #include <ros.h>
 #include <std_msgs/Float64.h>
-#include <AR3/AR3_Debug.h>
+#include <AR3/AR3_Feedback.h>
+#include <Teensy/AR3_Control.h>
 #include <math.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -51,12 +52,9 @@ double pulse6Rev = 1600.0*(19.0+(38.0/187.0)); // pulse/rev, gearbox;
 int pulDelay = 80; // default is 50 for max speed
 
 // Joint angle variables
-double joint1Angle = 0.0, joint1SetAngle = 0.0, joint1Error = 0.0;
-double joint2Angle = 0.0, joint2SetAngle = 0.0, joint2Error = 0.0;
-double joint3Angle = 0.0, joint3SetAngle = 0.0, joint3Error = 0.0;
-double joint4Angle = 0.0, joint4SetAngle = 0.0, joint4Error = 0.0;
-double joint5Angle = 0.0, joint5SetAngle = 0.0, joint5Error = 0.0;
-double joint6Angle = 0.0, joint6SetAngle = 0.0, joint6Error = 0.0;
+double SetAngles[6] = {0.0,0.0,0.0,0.0,0.0,0.0};
+double AngleErrors[6] = {0.0,0.0,0.0,0.0,0.0,0.0};
+double JointAngles[6] = {0.0,0.0,0.0,0.0,0.0,0.0};
 
 // Fuzzy equality to prevent jitter in the motors. This value is when the joint is 'close enough'
 // to its setpoint
@@ -69,53 +67,27 @@ double accelTime = 0;
 int ePinValue = 1;
 int limState = 0;
 
-// States
+// Command States
 int home = 0;
 int run = 0;
+int rest = 0;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ROS Definitions
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-AR3::AR3_Debug jointPubData;
-ros::Publisher jointPub("/AR3/Debug", &jointPubData);
+AR3::AR3_Feedback AR3FeedbackData;
+ros::Publisher AR3FeedbackPub("/AR3/Feedback", &AR3FeedbackData);
 
 // Joint 1 callback
-void joint1Callback(const std_msgs::Float64& joint1_msg){
-    joint1SetAngle = joint1_msg.data;// * 57.2957795;
-}
-
-// Joint 2 callback
-void joint2Callback(const std_msgs::Float64& joint2_msg){
-    joint2SetAngle = joint2_msg.data;// * 57.2957795;
-}
-
-// Joint 3 callback
-void joint3Callback(const std_msgs::Float64& joint3_msg){
-    joint3SetAngle = joint3_msg.data;// * 57.2957795;
-}
-
-// Joint 4 callback
-void joint4Callback(const std_msgs::Float64& joint4_msg){
-    joint4SetAngle = joint4_msg.data;// * 57.2957795;
-}
-
-// Joint 5 callback
-void joint5Callback(const std_msgs::Float64& joint5_msg){
-    joint5SetAngle = joint5_msg.data;// * 57.2957795;
-}
-
-// Joint 6 callback
-void joint6Callback(const std_msgs::Float64& joint6_msg){
-    joint6SetAngle = joint6_msg.data;// * 57.2957795;
+void AR3ControlCallback(const Teensy::AR3_Control &AR3_Control_Data){
+    memcpy(AR3_Control_Data.joint_angles,SetAngles,sizeof(AR3_Control_Data.joint_angles));
+    home = AR3_Control_Data.home;
+    run = AR3_Control_Data.run;
+    rest = AR3_Control_Data.rest;
 }
 
 ros::NodeHandle  nh;
-ros::Subscriber<std_msgs::Float64> joint1Sub("/rrbot/joint1_position_controller/command",& joint1Callback);
-ros::Subscriber<std_msgs::Float64> joint2Sub("/rrbot/joint2_position_controller/command",& joint2Callback);
-ros::Subscriber<std_msgs::Float64> joint3Sub("/rrbot/joint3_position_controller/command",& joint3Callback);
-ros::Subscriber<std_msgs::Float64> joint4Sub("/rrbot/joint4_position_controller/command",& joint4Callback);
-ros::Subscriber<std_msgs::Float64> joint5Sub("/rrbot/joint5_position_controller/command",& joint5Callback);
-ros::Subscriber<std_msgs::Float64> joint6Sub("/rrbot/joint6_position_controller/command",& joint6Callback);
+ros::Subscriber<Teensy::AR3_Control> AR3ControlSub("/AR3/Control",& AR3ControlCallback);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  Setup
@@ -145,15 +117,10 @@ void setup() {
 
     // Ros subscribers
     nh.initNode();
-    nh.subscribe(joint1Sub);
-    nh.subscribe(joint2Sub);
-    nh.subscribe(joint3Sub);
-    nh.subscribe(joint4Sub);
-    nh.subscribe(joint5Sub);
-    nh.subscribe(joint6Sub);
+    nh.subscribe(AR3ControlSub);
 
     // Debug info
-    nh.advertise(jointPub);
+    nh.advertise(AR3FeedbackPub);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -163,99 +130,46 @@ void loop() {
     ePinValue = digitalRead(eStopPin);
     t = micros();
 
-    if (!ePinValue && run){
-        jointPubData.eStop = 0;
+    if (!ePinValue){
+        AR3FeedbackData.eStop = 0;
         
-        // Joint 2
-        joint1Error = joint1SetAngle - joint1Angle;
-        moveJoint(joint1PUL,joint1DIR,&joint1Angle,joint1Error,pulse1Rev);
+        // Joint 1
+        AngleErrors[0] = SetAngles[0] - JointAngles[0];
+        moveJoint(joint1PUL,joint1DIR,&JointAngles[0],AngleErrors[0],pulse1Rev);
 
         // Joint 2
-        joint2Error = joint2SetAngle - joint2Angle;
-        moveJoint(joint2PUL,joint2DIR,&joint2Angle,joint2Error,pulse2Rev);
+        AngleErrors[1] = SetAngles[1] - JointAngles[1];
+        moveJoint(joint2PUL,joint2DIR,&JointAngles[1],AngleErrors[1],pulse2Rev);
 
         //  Joint 3
-        joint3Error = joint3SetAngle - joint3Angle;
-        moveJoint(joint3PUL,joint3DIR,&joint3Angle,joint3Error,pulse3Rev);
+        AngleErrors[1] = SetAngles[2] - JointAngles[2];
+        moveJoint(joint3PUL,joint3DIR,&JointAngles[2],AngleErrors[2],pulse3Rev);
 
         //  Joint 4
-        joint4Error = joint4SetAngle - joint4Angle;
-        moveJoint(joint4PUL,joint4DIR,&joint4Angle,joint4Error,pulse4Rev);
+        AngleErrors[1] = SetAngles[3] - JointAngles[3];
+        moveJoint(joint4PUL,joint4DIR,&JointAngles[3],AngleErrors[3],pulse4Rev);
 
         //  Joint 5
-        joint5Error = joint5SetAngle - joint5Angle;
-        moveJoint(joint5PUL,joint5DIR,&joint5Angle,joint5Error,pulse5Rev);
+        AngleErrors[1] = SetAngles[4] - JointAngles[4];
+        moveJoint(joint5PUL,joint5DIR,&JointAngles[4],AngleErrors[4],pulse5Rev);
 
         //  Joint 6
-        joint6Error = joint6SetAngle - joint6Angle;
-        moveJoint(joint6PUL,joint6DIR,&joint6Angle,joint6Error,pulse6Rev);
+        AngleErrors[1] = SetAngles[5] - JointAngles[5];
+        moveJoint(joint6PUL,joint6DIR,&JointAngles[5],AngleErrors[5],pulse6Rev);
 
         // Publish the arduinos current angle value for debugging purposes
         // COMMENT OUT FOR SPEED IMPROVEMENT
         if ((t-t_old) > (2000000)){
-            jointPubData.j1_current_angle = joint1Angle;
-            jointPubData.j1_setpoint_angle = joint1SetAngle;
-
-            jointPubData.j2_current_angle = joint2Angle;
-            jointPubData.j2_setpoint_angle = joint2SetAngle;
-
-            jointPubData.j3_current_angle = joint3Angle;
-            jointPubData.j3_setpoint_angle = joint3SetAngle;
-
-            jointPubData.j4_current_angle = joint4Angle;
-            jointPubData.j4_setpoint_angle = joint4SetAngle;
-
-            jointPubData.j5_current_angle = joint5Angle;
-            jointPubData.j5_setpoint_angle = joint5SetAngle;
-
-            jointPubData.j6_current_angle = joint6Angle;
-            jointPubData.j6_setpoint_angle = joint6SetAngle;
-            
-            jointPub.publish(&jointPubData);
+            memcpy(JointAngles,AR3FeedbackData.joint_angles,sizeof(AR3FeedbackData.joint_angles));
+            AR3FeedbackPub.publish(&AR3FeedbackData);
             t_old = t;
         }
     }
-    else if(!ePinValue && !home){
-        home_joint(joint1PUL, joint1DIR, joint1LIM, &joint1Angle, 1, -pi/2, &home);
-
-        jointPubData.eStop = 1;
-        jointPubData.j1_current_angle = joint1Angle;
-        jointPubData.j1_setpoint_angle = joint1SetAngle;
-        jointPubData.j2_current_angle = joint2Angle;
-        jointPubData.j2_setpoint_angle = joint2SetAngle;
-        jointPubData.j3_current_angle = joint3Angle;
-        jointPubData.j3_setpoint_angle = joint3SetAngle;
-        jointPubData.j4_current_angle = joint4Angle;
-        jointPubData.j4_setpoint_angle = joint4SetAngle;
-        jointPubData.j5_current_angle = joint5Angle;
-        jointPubData.j5_setpoint_angle = joint5SetAngle;
-        jointPubData.j6_current_angle = joint6Angle;
-        jointPubData.j6_setpoint_angle = joint6SetAngle;
-        jointPub.publish(&jointPubData);
-    }
     else{
         if ((t-t_old) > (2000000)){
-            jointPubData.eStop = 1;
-
-            jointPubData.j1_current_angle = joint1Angle;
-            jointPubData.j1_setpoint_angle = joint1SetAngle;
-            
-            jointPubData.j2_current_angle = joint2Angle;
-            jointPubData.j2_setpoint_angle = joint2SetAngle;
-
-            jointPubData.j3_current_angle = joint3Angle;
-            jointPubData.j3_setpoint_angle = joint3SetAngle;
-
-            jointPubData.j4_current_angle = joint4Angle;
-            jointPubData.j4_setpoint_angle = joint4SetAngle;
-
-            jointPubData.j5_current_angle = joint5Angle;
-            jointPubData.j5_setpoint_angle = joint5SetAngle;
-
-            jointPubData.j6_current_angle = joint6Angle;
-            jointPubData.j6_setpoint_angle = joint6SetAngle;
-            
-            jointPub.publish(&jointPubData);
+            AR3FeedbackData.eStop = 1;
+            memcpy(JointAngles,AR3FeedbackData.joint_angles,sizeof(AR3FeedbackData.joint_angles));
+            AR3FeedbackPub.publish(&AR3FeedbackData);
             t_old = t;
         }
     }
@@ -307,15 +221,3 @@ void moveJoint(int pin, int dirPin, double* angle, double error, double pulRev) 
     if(*angle < 0.0){*angle = (2.0*pi) + *angle;}
 }
 
-void home_joint(int pin, int dirPin, int limPin, double* angle, int dir, double setAngle){
-    int limState = digitalRead(limPin);
-    
-    if (!limState) {
-        sendPulse(pin,dirPin,dir);
-        delayMicroseconds(300);
-        limState = digitalRead(limPin);
-    }
-    else{
-        *angle = setAngle;
-    }
-}
