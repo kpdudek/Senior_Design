@@ -17,9 +17,9 @@ def pulseCallback(data):
 
   for i in range(0,5):
     jointAngles.joint_angles[i] = data.pulses[i] / 2400.0 * 2 * pi
-    if (jointAngles.j1_angle > 2*pi):
+    if (jointAngles.joint_angles[i] > 2*pi):
       jointAngles.joint_angles[i] = 0.0 + jointAngles.joint_angles[i] - 2*pi
-    elif (jointAngles.j1_angle < 0.0):
+    elif (jointAngles.joint_angles[i] < 0.0):
       jointAngles.joint_angles[i] = jointAngles.joint_angles[i] + 2*pi
 
   anglesPub.publish(jointAngles)
