@@ -11,6 +11,14 @@ import os,getopt
 from Teensy.msg import AR3_Control
 from AR3.msg import AR3_Feedback
 
+import sys
+import os
+import pwd
+name = pwd.getpwuid( os.getuid() ).pw_name
+file_path = '/home/%s/Senior_Design/src/AR3/scripts'%name
+sys.path.insert(1,file_path)
+from RobotControllerClass import RobotController
+
 class Interpreter(object):
     def __init__(self):
         self.joint1 = Float64()

@@ -16,7 +16,7 @@ from AR3.msg import AR3_Feedback
 def main(argv):
         rospy.init_node('Joint_Control', anonymous='True')
         robot_controller = RobotController()
-        rate = rospy.Rate(2)
+        rate = rospy.Rate(60)
 
         # Try to get the command line arguments
         try:

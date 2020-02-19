@@ -68,8 +68,9 @@ def main():
         angles_j5 = [0.0, pi/3.0, 0.0, 5.0*pi/3.0]
         angles_j6 = [0.0, pi/2.0, 0.0, 3.0*pi/2.0]
 
+
+        robot_controller = RobotController()
         angleIdx = 0
-        
         while not rospy.is_shutdown():
                 if eStop == 0:
                         if ((abs(j2Angle - angles_j2[angleIdx]) < .005) and (abs(j3Angle - angles_j3[angleIdx]) < .005) and (angleIdx < len(angles_j2)-1)):
@@ -77,12 +78,7 @@ def main():
                         elif ((angleIdx == (len(angles_j2)-1)) and (abs(j2Angle - angles_j2[angleIdx]) < .005) and (abs(j3Angle - angles_j3[angleIdx]) < .005)):
                                 angleIdx = 0
                         
-                        j1.data = angles_j1[angleIdx]
-                        j2.data = angles_j2[angleIdx]
-                        j3.data = angles_j3[angleIdx]
-                        j4.data = angles_j4[angleIdx]
-                        j5.data = angles_j5[angleIdx]
-                        j6.data = angles_j6[angleIdx]
+                        robot
                 
                 j1_pub.publish(j1)
                 j2_pub.publish(j2)
