@@ -1,11 +1,12 @@
 #!/usr/bin/env python
+from Teensy.msg import AR3_Control
+from AR3.msg import AR3_Feedback
 
 class RobotController(object):
     def __init__(self):
         # ROS stuff
         self.AR3Control = AR3_Control()
-        self.AR3Angles = [0.0,0.0,0.0,0.0,0.0,0.0]
-        self.eStop
+        self.AR3Feedback = AR3_Feedback()
 
         self.AR3ControlPub = rospy.Publisher('/AR3/Control', AR3_Control, queue_size = 1)
         self.AR3FeedbackSub = rospy.Subscriber('/AR3/Feedback', AR3_Feedback, self.AR3FeedbackCallback)
@@ -25,8 +26,8 @@ class RobotController(object):
         t_old = time.time()
 
     def AR3FeedbackCallback(self,data):
-        self.AR3Angles = data.joint_angles
-        self.eStop = data.eStop
+        self.AR3Feedback.joint_angles = data.joint_angles
+        self.AR3Feedback.eStop = data.eStop
     
     def set_controller_to_AR3(self):
         while (t-t_old) < 4:

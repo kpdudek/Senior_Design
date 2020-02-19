@@ -10,6 +10,7 @@ from AR3.msg import AR3_Feedback
 from Teensy.msg import AR3_Control
 from RobotControllerClass import RobotController
 
+
 def main():
     rospy.init_node('Joint_Control', anonymous='True')
 
