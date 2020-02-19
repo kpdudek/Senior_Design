@@ -7,7 +7,19 @@ import numpy as np
 from std_msgs.msg import Float64
 import time
 from AR3.msg import AR3_Debug
+import sys
+import os
+import pwd
+name = pwd.getpwuid( os.getuid() ).pw_name
+file_path = '/home/%s/Senior_Design/src/AR3/scripts'%name
+sys.path.insert(1,file_path)
 from RobotControllerClass import RobotController
+
+def angle_check(set,current,tol):
+        for idx in range(0,len(set)):
+                if abs(set[idx]-current[idx]) > tol:
+                        return False
+        return True
 
 def main():
         rospy.init_node('Joint_Control', anonymous='True')
@@ -22,25 +34,19 @@ def main():
         angles_j5 = [0.0, pi/3.0, 0.0, 5.0*pi/3.0]
         angles_j6 = [0.0, pi/2.0, 0.0, 3.0*pi/2.0]
 
-
-        
         angleIdx = 0
+        set_angles = [angles_j1[angleIdx],angles_j2[angleIdx],angles_j3[angleIdx],angles_j4[angleIdx],angles_j5[angleIdx],angles_j6[angleIdx]]
+        robot_controller.AR3Control.joint_angles = set_angles
         while not rospy.is_shutdown():
-                if robot_controller.eStop == 0:
-                        if ((abs(j2Angle - angles_j2[angleIdx]) < .005) and (abs(j3Angle - angles_j3[angleIdx]) < .005) and (angleIdx < len(angles_j2)-1)):
-                                angleIdx = angleIdx + 1   
-                        elif ((angleIdx == (len(angles_j2)-1)) and (abs(j2Angle - angles_j2[angleIdx]) < .005) and (abs(j3Angle - angles_j3[angleIdx]) < .005)):
-                                angleIdx = 0
-                        
-                        robot
+                # if robot_controller.AR3Feedback.eStop == 0:
+                if angle_check(set_angles,robot_controller.AR3Feedback.joint_angles):
+                        angleIdx = angleIdx + 1   
+                elif ((angleIdx == (len(angles_j2)-1)) and angle_check(set_angles,robot_controller.AR3Feedback.joint_angles)):
+                        angleIdx = 0
                 
-                j1_pub.publish(j1)
-                j2_pub.publish(j2)
-                j3_pub.publish(j3)
-                j4_pub.publish(j4)
-                j5_pub.publish(j5)
-                j6_pub.publish(j6)
-
+                set_angles = [angles_j1[angleIdx],angles_j2[angleIdx],angles_j3[angleIdx],angles_j4[angleIdx],angles_j5[angleIdx],angles_j6[angleIdx]]
+                robot_controller.AR3Control.joint_angles = set_angles
+                robot_controller.send_joints()
                 rate.sleep()
                 
 if __name__ == "__main__":
