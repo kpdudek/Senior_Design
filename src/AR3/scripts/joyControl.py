@@ -8,8 +8,14 @@ import time
 from sensor_msgs.msg import Joy
 from AR3.msg import AR3_Feedback
 from Teensy.msg import AR3_Control
-from RobotControllerClass import RobotController
 
+import sys
+import os
+import pwd
+name = pwd.getpwuid( os.getuid() ).pw_name
+file_path = '/home/%s/Senior_Design/src/AR3/scripts'%name
+sys.path.insert(1,file_path)
+from RobotControllerClass import RobotController
 
 def main():
     rospy.init_node('Joint_Control', anonymous='True')

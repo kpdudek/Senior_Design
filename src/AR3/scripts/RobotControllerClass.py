@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 from Teensy.msg import AR3_Control
 from AR3.msg import AR3_Feedback
+import rospy
+import time
 
 class RobotController(object):
     def __init__(self):

@@ -8,10 +8,16 @@ from std_msgs.msg import Float64
 import time
 import sys
 import os,getopt
-from joyControl import RobotController
 from Teensy.msg import AR3_Control
 from AR3.msg import AR3_Feedback
 
+import sys
+import os
+import pwd
+name = pwd.getpwuid( os.getuid() ).pw_name
+file_path = '/home/%s/Senior_Design/src/AR3/scripts'%name
+sys.path.insert(1,file_path)
+from RobotControllerClass import RobotController
 
 def main(argv):
         rospy.init_node('Joint_Control', anonymous='True')
