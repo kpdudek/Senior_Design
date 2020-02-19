@@ -20,12 +20,13 @@ from RobotControllerClass import RobotController
 def main():
     rospy.init_node('Joint_Control', anonymous='True')
 
-    robot_controller = RobotControler()
+    robot_controller = RobotController()
 
     xbox = rospy.Subscriber('/joy', Joy, robot_controller.joy_callback)
     rate = rospy.Rate(60)
 
     robot_controller.set_controller_to_AR3()
+    robot_controller.AR3Control.run = 1
     while not rospy.is_shutdown():
         robot_controller.stick_move()
         robot_controller.send_joints()

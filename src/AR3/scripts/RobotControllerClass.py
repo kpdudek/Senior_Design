@@ -3,6 +3,12 @@ from Teensy.msg import AR3_Control
 from AR3.msg import AR3_Feedback
 import rospy
 import time
+from math import sin
+from math import pi
+import numpy as np
+from std_msgs.msg import Float64
+import sys
+
 
 class RobotController(object):
     def __init__(self):
@@ -24,16 +30,16 @@ class RobotController(object):
         self.A = 0
         self.Y = 0
 
-        t = time.time()
-        t_old = time.time()
 
     def AR3FeedbackCallback(self,data):
         self.AR3Feedback.joint_angles = data.joint_angles
         self.AR3Feedback.eStop = data.eStop
     
     def set_controller_to_AR3(self):
-        while (t-t_old) < 4:
-            self.AR3Control.joint_angles = self.AR3Angles
+        t = time.time()
+        t_old = time.time()
+        while (t-t_old) < 3:
+            self.AR3Control.joint_angles = self.AR3Feedback.joint_angles
             t = time.time()
         self.print_control()
 
@@ -65,6 +71,7 @@ class RobotController(object):
 
     def stick_move(self):
         # Modify one joint angle based upon
+        self.AR3Control.joint_angles = list(self.AR3Control.joint_angles)
         self.AR3Control.joint_angles[self.joint_idx] = self.AR3Control.joint_angles[self.joint_idx] + (self.left_stick_val*self.ka)
 
         # Convert to global angle

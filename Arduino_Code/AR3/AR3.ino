@@ -80,7 +80,7 @@ ros::Publisher AR3FeedbackPub("/AR3/Feedback", &AR3FeedbackData);
 
 // Joint 1 callback
 void AR3ControlCallback(const Teensy::AR3_Control &AR3_Control_Data){
-    memcpy(AR3_Control_Data.joint_angles,SetAngles,sizeof(AR3_Control_Data.joint_angles));
+    memcpy(SetAngles,AR3_Control_Data.joint_angles,sizeof(AR3_Control_Data.joint_angles));
     home = AR3_Control_Data.home;
     run = AR3_Control_Data.run;
     rest = AR3_Control_Data.rest;
@@ -130,8 +130,9 @@ void loop() {
     ePinValue = digitalRead(eStopPin);
     t = micros();
 
-    if (!ePinValue){
+    if (!ePinValue && run){
         AR3FeedbackData.eStop = 0;
+        AR3FeedbackData.running = 1;
         
         // Joint 1
         AngleErrors[0] = SetAngles[0] - JointAngles[0];
@@ -142,33 +143,58 @@ void loop() {
         moveJoint(joint2PUL,joint2DIR,&JointAngles[1],AngleErrors[1],pulse2Rev);
 
         //  Joint 3
-        AngleErrors[1] = SetAngles[2] - JointAngles[2];
+        AngleErrors[2] = SetAngles[2] - JointAngles[2];
         moveJoint(joint3PUL,joint3DIR,&JointAngles[2],AngleErrors[2],pulse3Rev);
 
         //  Joint 4
-        AngleErrors[1] = SetAngles[3] - JointAngles[3];
+        AngleErrors[3] = SetAngles[3] - JointAngles[3];
         moveJoint(joint4PUL,joint4DIR,&JointAngles[3],AngleErrors[3],pulse4Rev);
 
         //  Joint 5
-        AngleErrors[1] = SetAngles[4] - JointAngles[4];
+        AngleErrors[4] = SetAngles[4] - JointAngles[4];
         moveJoint(joint5PUL,joint5DIR,&JointAngles[4],AngleErrors[4],pulse5Rev);
 
         //  Joint 6
-        AngleErrors[1] = SetAngles[5] - JointAngles[5];
+        AngleErrors[5] = SetAngles[5] - JointAngles[5];
         moveJoint(joint6PUL,joint6DIR,&JointAngles[5],AngleErrors[5],pulse6Rev);
 
         // Publish the arduinos current angle value for debugging purposes
         // COMMENT OUT FOR SPEED IMPROVEMENT
         if ((t-t_old) > (2000000)){
-            memcpy(JointAngles,AR3FeedbackData.joint_angles,sizeof(AR3FeedbackData.joint_angles));
+            memcpy(AR3FeedbackData.joint_angles,JointAngles,sizeof(AR3FeedbackData.joint_angles));
+            memcpy(AR3FeedbackData.setpoint_angles,SetAngles,sizeof(AR3FeedbackData.joint_angles));
             AR3FeedbackPub.publish(&AR3FeedbackData);
             t_old = t;
         }
     }
+    else if(!ePinValue && home){
+        AR3FeedbackData.running = 0;
+        AR3FeedbackData.eStop = 0;
+        limState = digitalRead(joint1LIM);
+        
+        if (!limState && !AR3FeedbackData.homed){
+            homeJoint(joint1PUL,joint1DIR,1);
+            AR3FeedbackData.homed = 0;
+        }
+        else{
+            JointAngles[0] = (2.0*pi)-(pi/2.0);
+            AR3FeedbackData.homed = 1;
+        }
+
+        if ((t-t_old) > (2000000)){
+            memcpy(AR3FeedbackData.joint_angles,JointAngles,sizeof(AR3FeedbackData.joint_angles));
+            memcpy(AR3FeedbackData.setpoint_angles,SetAngles,sizeof(AR3FeedbackData.joint_angles));
+            AR3FeedbackPub.publish(&AR3FeedbackData);
+            t_old = t;
+        }
+
+    }
     else{
         if ((t-t_old) > (2000000)){
             AR3FeedbackData.eStop = 1;
-            memcpy(JointAngles,AR3FeedbackData.joint_angles,sizeof(AR3FeedbackData.joint_angles));
+            AR3FeedbackData.running = 0;
+            memcpy(AR3FeedbackData.joint_angles,JointAngles,sizeof(AR3FeedbackData.joint_angles));
+            memcpy(AR3FeedbackData.setpoint_angles,SetAngles,sizeof(AR3FeedbackData.joint_angles));
             AR3FeedbackPub.publish(&AR3FeedbackData);
             t_old = t;
         }
@@ -221,3 +247,7 @@ void moveJoint(int pin, int dirPin, double* angle, double error, double pulRev) 
     if(*angle < 0.0){*angle = (2.0*pi) + *angle;}
 }
 
+void homeJoint(int pin, int dirPin, int dir){
+    sendPulse(pin,dirPin,dir);
+    delayMicroseconds(300);
+}

@@ -40,15 +40,23 @@ def main(argv):
                 angle_5 = input("What angle to you want to move [J5] to (in radians): ")
                 angle_6 = input("What angle to you want to move [J6] to (in radians): ")
                 robot_controller.AR3Control.joint_angles = [angle_1,angle_2,angle_3,angle_4,angle_5,angle_6]
+                robot_controller.AR3Control.home = 0
+                robot_controller.AR3Control.run = 1
+                robot_controller.AR3Control.rest = 0
                 
         else:
                 # Take in the arguments
                 for opt, arg in opts:
                         if opt in ("-h"):
-                                robot_controller.AR3Control.joint_angles = [0.0,0.0,0.0,0.0,0.0,0.0]
+                                robot_controller.AR3Control.home = 1
+                                robot_controller.AR3Control.run = 0
+                                robot_controller.AR3Control.rest = 0
                        
                         elif opt in ("-r"):
                                 robot_controller.AR3Control.joint_angles = [0.0,0.8,1.8,0.0,5.53,0.0]
+                                robot_controller.AR3Control.home = 0
+                                robot_controller.AR3Control.run = 0
+                                robot_controller.AR3Control.rest = 1
 
 
         while not rospy.is_shutdown():
