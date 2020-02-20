@@ -32,6 +32,7 @@ class RobotController(object):
 
 
     def AR3FeedbackCallback(self,data):
+        data.joint_angles = list(data.joint_angles)
         self.AR3Feedback.joint_angles = data.joint_angles
         self.AR3Feedback.eStop = data.eStop
     

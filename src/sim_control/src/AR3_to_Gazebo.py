@@ -38,6 +38,8 @@ class Interpreter(object):
         self.AR3ControlSub = rospy.Subscriber('/AR3/Control', AR3_Control, self.AR3ControlCallback)
     
     def AR3ControlCallback(self,data):
+        data.joint_angles = list(data.joint_angles)
+        
         self.joint1.data = data.joint_angles[0]
         self.joint2.data = data.joint_angles[1]
         self.joint3.data = data.joint_angles[2]
