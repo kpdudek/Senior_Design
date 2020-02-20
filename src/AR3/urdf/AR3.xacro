@@ -16,7 +16,7 @@
   <xacro:property name="joint1_y" value="0"/>
   <xacro:property name="joint1_z" value="0"/>
   
-  <xacro:property name="joint2_x" value=".06136563"/>
+  <xacro:property name="joint2_x" value=".0508"/>
   <xacro:property name="joint2_y" value="-.06786547"/>
   <xacro:property name="joint2_z" value=".13907540"/>
 
@@ -24,7 +24,7 @@
   <xacro:property name="joint3_y" value="0"/>
   <xacro:property name="joint3_z" value=".305"/>
 
-  <xacro:property name="joint4_x" value="-.0235"/>
+  <xacro:property name="joint4_x" value="-.038"/>
   <xacro:property name="joint4_y" value="-.0503"/>
   <xacro:property name="joint4_z" value="0"/>
 
