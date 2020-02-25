@@ -76,11 +76,11 @@ void loop()
   long newPosition4 = Enc4.read();
   if (newPosition4 != oldPosition4) {
     oldPosition4 = newPosition4;
-    pulse_msg.pulses[3] = newPosition4;
+    pulse_msg.pulses[4] = newPosition4;
   }
   
-  pulse_msg.pulses[4] = 5;
-  pulse_msg.pulses[5] = 6;
+  pulse_msg.pulses[3] = 0;
+  pulse_msg.pulses[5] = 0;
      
 
   // Publish at a designated frequency in milliseconds

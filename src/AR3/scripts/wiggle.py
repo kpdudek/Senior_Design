@@ -19,23 +19,27 @@ file_path = '/home/%s/Senior_Design/src/AR3/scripts'%name
 sys.path.insert(1,file_path)
 from RobotControllerClass import RobotController
 
-def main(argv):
+def main():
         rospy.init_node('Joint_Control', anonymous='True')
         robot_controller = RobotController()
         rate = rospy.Rate(10)
 
         val = 0
-        scale = 0.5
-        step = 0.05
+        scale = 1.0
+        step = 0.1
+        robot_controller.AR3Control.run = 1
         while not rospy.is_shutdown():
                 for idx in range(0,6):
-                        robot_controller.AR3Control.joint_angles[idx] = (sin(val)*scale)
+                        if idx == 1:
+                                robot_controller.AR3Control.joint_angles[idx] = (sin(val)*scale*.625)
+                        else:
+                                robot_controller.AR3Control.joint_angles[idx] = (sin(val)*scale)
                 robot_controller.send_joints()
                 val = val + step
                 rate.sleep()
                 
 
 if __name__ == "__main__":
-        main(sys.argv[1:])
+        main()
 
 
