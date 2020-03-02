@@ -32,10 +32,10 @@
 #define eStopPin 13
 
 // Good 'ol PI
-double pi = 3.1415926;
+double pi = 3.14159265358979323;
 
 // Varables used to store time both current and 'stopwatch' times
-unsigned long int t_old=0, t=0.0, t_old_accel = 0;
+unsigned long int t_old=0, t=0.0, t_old_accel = 0, pub_freq = 2000000;
 
 // Number of pulses to rotate a joint 2*PI radians. Accounts for settings on the stepper driver and
 // all mechanical ratios. Inline comments denote the parameters used in the calculation.
@@ -160,7 +160,7 @@ void loop() {
 
         // Publish the arduinos current angle value for debugging purposes
         // COMMENT OUT FOR SPEED IMPROVEMENT
-        if ((t-t_old) > (2000000)){
+        if ((t-t_old) > (pub_freq)){
             memcpy(AR3FeedbackData.joint_angles,JointAngles,sizeof(AR3FeedbackData.joint_angles));
             memcpy(AR3FeedbackData.setpoint_angles,SetAngles,sizeof(AR3FeedbackData.joint_angles));
             AR3FeedbackPub.publish(&AR3FeedbackData);
@@ -181,7 +181,7 @@ void loop() {
             AR3FeedbackData.homed = 1;
         }
 
-        if ((t-t_old) > (2000000)){
+        if ((t-t_old) > (pub_freq)){
             memcpy(AR3FeedbackData.joint_angles,JointAngles,sizeof(AR3FeedbackData.joint_angles));
             memcpy(AR3FeedbackData.setpoint_angles,SetAngles,sizeof(AR3FeedbackData.joint_angles));
             AR3FeedbackPub.publish(&AR3FeedbackData);
@@ -190,7 +190,7 @@ void loop() {
 
     }
     else{
-        if ((t-t_old) > (2000000)){
+        if ((t-t_old) > (pub_freq)){
             AR3FeedbackData.eStop = 1;
             AR3FeedbackData.running = 0;
             memcpy(AR3FeedbackData.joint_angles,JointAngles,sizeof(AR3FeedbackData.joint_angles));
@@ -249,5 +249,5 @@ void moveJoint(int pin, int dirPin, double* angle, double error, double pulRev) 
 
 void homeJoint(int pin, int dirPin, int dir){
     sendPulse(pin,dirPin,dir);
-    delayMicroseconds(300);
+    delayMicroseconds(400);
 }

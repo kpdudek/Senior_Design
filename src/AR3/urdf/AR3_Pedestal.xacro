@@ -31,7 +31,7 @@
       </visual>
       <inertial>
         <origin xyz="0 0 ${height1/2}" rpy="0 0 0"/>
-        <mass value="${mass}"/>
+        <mass value="200"/>
         <inertia
           ixx="${mass / 12.0 * (width*width + height1*height1)}" ixy="0.0" ixz="0.0"
           iyy="${mass / 12.0 * (height1*height1 + width*width)}" iyz="0.0"

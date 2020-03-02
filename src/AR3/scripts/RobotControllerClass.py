@@ -46,6 +46,8 @@ class RobotController(object):
 
     def home(self):
         self.AR3Control.joint_angles = [0.0,0.0,0.0,0.0,0.0,0.0]
+        # self.AR3Control.run = 0
+        # self.AR3Control.home = 1
 
     def joy_callback(self,data):
         self.A = data.buttons[0]

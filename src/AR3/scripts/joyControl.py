@@ -27,7 +27,7 @@ def main():
 
     robot_controller.set_controller_to_AR3()
     robot_controller.AR3Control.run = 1
-    while not rospy.is_shutdown():
+    while not rospy.is_shutdown():   
         robot_controller.stick_move()
         robot_controller.send_joints()
         rate.sleep()
