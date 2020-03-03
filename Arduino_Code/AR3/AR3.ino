@@ -35,7 +35,7 @@
 double pi = 3.14159265358979323;
 
 // Varables used to store time both current and 'stopwatch' times
-unsigned long int t_old=0, t=0.0, t_old_accel = 0, pub_freq = 2000000;
+unsigned long int t_old=0, t=0.0, pub_freq = 2000000;
 
 // Number of pulses to rotate a joint 2*PI radians. Accounts for settings on the stepper driver and
 // all mechanical ratios. Inline comments denote the parameters used in the calculation.
@@ -49,7 +49,7 @@ double pulse6Rev = 1600.0*(19.0+(38.0/187.0)); // pulse/rev, gearbox;
 // Pulse width of the signal sent to the stepper driver. This time is in microsecons
 // and is passed to the delay_microseconds() function. Making this value larger will
 // severely affect the frequency at which the main loop runs
-int pulDelay = 80; // default is 50 for max speed
+int pulDelay = 50; // default is 50 for max speed
 
 // Joint angle variables
 double SetAngles[6] = {0.0,0.0,0.0,0.0,0.0,0.0};
@@ -61,7 +61,10 @@ double JointAngles[6] = {0.0,0.0,0.0,0.0,0.0,0.0};
 double angleTol = 0.0005;
 
 // Acceleration time. Time to add between pulses to "decelerate" the joint
-double accelTime = 0;
+double dist[6] = {0.0,0.0,0.0,0.0,0.0,0.0};
+double accelTime[6] = {0.0,0.0,0.0,0.0,0.0,0.0};
+double t_old_accel[6] = {0.0,0.0,0.0,0.0,0.0,0.0};
+double ka = 800.0, thresh = 1.57;
 
 // Current state of the e-stop pin. Default is True meaning no movements will occur
 int ePinValue = 1;
@@ -133,26 +136,59 @@ void loop() {
     if (!ePinValue && run){
         AR3FeedbackData.eStop = 0;
         AR3FeedbackData.running = 1;
+
+        //TODO: Function that calculates all accel times
         
         // Joint 1
-        AngleErrors[0] = SetAngles[0] - JointAngles[0];
-        moveJoint(joint1PUL,joint1DIR,&JointAngles[0],AngleErrors[0],pulse1Rev);
+        dist[0] = abs(SetAngles[0] - JointAngles[0]);
+        if (dist[0] > 3.14){dist[0] = dist[0] - 3.14;}
+        if(dist[0]<thresh){accelTime[0] = pow((1.0/dist[0]),2.0);}
+        else{accelTime[0] = 0.0;}
+
+        if ((t-t_old_accel[0]) > accelTime[0]){
+            AngleErrors[0] = SetAngles[0] - JointAngles[0];
+            moveJoint(joint1PUL,joint1DIR,&JointAngles[0],AngleErrors[0],pulse1Rev);
+            t_old_accel[0] = t;
+        }
 
         // Joint 2
-        AngleErrors[1] = SetAngles[1] - JointAngles[1];
-        moveJoint(joint2PUL,joint2DIR,&JointAngles[1],AngleErrors[1],pulse2Rev);
-
+        dist[1] = abs(SetAngles[1] - JointAngles[1]);
+        if (dist[1] > 3.14){dist[1] = dist[1] - 3.14;}
+        if(dist[1]<thresh){accelTime[1] = pow((1.0/dist[1]),2.0);}
+        else{accelTime[1] = 0.0;}
+    
+        if ((t-t_old_accel[1]) > accelTime[1]){
+            AngleErrors[1] = SetAngles[1] - JointAngles[1];
+            moveJoint(joint2PUL,joint2DIR,&JointAngles[1],AngleErrors[1],pulse2Rev);
+            t_old_accel[1] = t;
+        }
         //  Joint 3
-        AngleErrors[2] = SetAngles[2] - JointAngles[2];
-        moveJoint(joint3PUL,joint3DIR,&JointAngles[2],AngleErrors[2],pulse3Rev);
+        dist[2] = abs(SetAngles[2] - JointAngles[2]);
+        if (dist[2] > 3.14){dist[2] = dist[2] - 3.14;}
+        if(dist[2]<thresh){accelTime[2] = pow((1.0/dist[2]),2.0);}
+        else{accelTime[2] = 0.0;}
+
+        if ((t-t_old_accel[2]) > accelTime[2]){
+            AngleErrors[2] = SetAngles[2] - JointAngles[2];
+            moveJoint(joint3PUL,joint3DIR,&JointAngles[2],AngleErrors[2],pulse3Rev);
+            t_old_accel[2] = t;
+        }
 
         //  Joint 4
         AngleErrors[3] = SetAngles[3] - JointAngles[3];
         moveJoint(joint4PUL,joint4DIR,&JointAngles[3],AngleErrors[3],pulse4Rev);
 
         //  Joint 5
-        AngleErrors[4] = SetAngles[4] - JointAngles[4];
-        moveJoint(joint5PUL,joint5DIR,&JointAngles[4],AngleErrors[4],pulse5Rev);
+        dist[4] = abs(SetAngles[4] - JointAngles[4]);
+        if (dist[4] > 3.14){dist[4] = dist[4] - 3.14;}
+        if(dist[4]<thresh){accelTime[4] = pow((1.0/dist[4]),2.0);}
+        else{accelTime[4] = 0.0;}
+
+        if ((t-t_old_accel[4]) > accelTime[4]){
+            AngleErrors[4] = SetAngles[4] - JointAngles[4];
+            moveJoint(joint5PUL,joint5DIR,&JointAngles[4],AngleErrors[4],pulse5Rev);
+            t_old_accel[4] = t;
+        }
 
         //  Joint 6
         AngleErrors[5] = SetAngles[5] - JointAngles[5];

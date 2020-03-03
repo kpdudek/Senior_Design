@@ -29,6 +29,7 @@ class RobotController(object):
         self.B = 0
         self.A = 0
         self.Y = 0
+        self.X = 0
 
 
     def AR3FeedbackCallback(self,data):
@@ -49,10 +50,15 @@ class RobotController(object):
         # self.AR3Control.run = 0
         # self.AR3Control.home = 1
 
+    def rest(self):
+        self.AR3Control.joint_angles = [0.0,0.8,1.8,0.0,5.53,0.0]
+
     def joy_callback(self,data):
         self.A = data.buttons[0]
         self.B = data.buttons[1]
         self.Y = data.buttons[3]
+        self.X = data.buttons[2]
+
         self.left_stick_val = -1.0 * data.axes[0]
         self.left_stick_press = data.buttons[9]
 
@@ -70,6 +76,8 @@ class RobotController(object):
 
         if self.Y == 1:
             self.home()
+        elif self.X == 1:
+            self.rest()
 
 
     def stick_move(self):
