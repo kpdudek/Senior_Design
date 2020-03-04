@@ -19,9 +19,6 @@ class RobotController(object):
         self.AR3ControlPub = rospy.Publisher('/AR3/Control', AR3_Control, queue_size = 1)
         self.AR3FeedbackSub = rospy.Subscriber('/AR3/Feedback', AR3_Feedback, self.AR3FeedbackCallback)
 
-        # Motion parameters
-        self.joint_idx = 0
-
     def AR3FeedbackCallback(self,data):
         data.joint_angles = list(data.joint_angles)
         self.AR3Feedback.joint_angles = data.joint_angles
