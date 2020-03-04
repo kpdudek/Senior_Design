@@ -16,11 +16,12 @@ name = pwd.getpwuid( os.getuid() ).pw_name
 file_path = '/home/%s/Senior_Design/src/AR3/scripts'%name
 sys.path.insert(1,file_path)
 from RobotControllerClass import RobotController
+from JoyControlClass import JoyController
 
 def main():
-    rospy.init_node('Joint_Control', anonymous='True')
+    rospy.init_node('Joy_Control', anonymous='True')
 
-    robot_controller = RobotController()
+    robot_controller = JoyController()
 
     xbox = rospy.Subscriber('/joy', Joy, robot_controller.joy_callback)
     rate = rospy.Rate(60)

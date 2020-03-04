@@ -287,3 +287,5 @@ void homeJoint(int pin, int dirPin, int dir){
     sendPulse(pin,dirPin,dir);
     delayMicroseconds(400);
 }
+
+
