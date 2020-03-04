@@ -35,7 +35,7 @@
 double pi = 3.14159265358979323;
 
 // Varables used to store time both current and 'stopwatch' times
-unsigned long int t_old=0, t=0.0, pub_freq = 2000000;
+unsigned long int t_old=0, t=0, pub_freq = 2000000;
 
 // Number of pulses to rotate a joint 2*PI radians. Accounts for settings on the stepper driver and
 // all mechanical ratios. Inline comments denote the parameters used in the calculation.
@@ -43,7 +43,7 @@ double pulse1Rev = 1600.0*10.0*4.0; // pulse/rev, gearbox, pulley ratio
 double pulse2Rev = 3200.0*50.0; // pulse/rev, gearbox
 double pulse3Rev = 1600.0*50.0; // pulse/rev, gearbox
 double pulse4Rev = 1600.0*(13.0+(212.0/289.0))*2.4893; // pulse/rev, gearbox, pulley ratio
-double pulse5Rev = 1/((8.0/1600.0)/(2.0*pi*13.675)); // pulse/rev, lead screw
+double pulse5Rev = 1.0/((8.0/1600.0)/(2.0*pi*13.675)); // pulse/rev, lead screw
 double pulse6Rev = 1600.0*(19.0+(38.0/187.0)); // pulse/rev, gearbox;
 
 // Pulse width of the signal sent to the stepper driver. This time is in microsecons
@@ -66,7 +66,7 @@ double accelTime[6] = {0.0,0.0,0.0,0.0,0.0,0.0};
 double t_old_accel[6] = {0.0,0.0,0.0,0.0,0.0,0.0};
 double ka = 800.0, thresh = 1.57;
 
-// Current state of the e-stop pin. Default is True meaning no movements will occur
+// Current state of the e-stop pin. Default is True meaning no movements will not occur
 int ePinValue = 1;
 int limState = 0;
 
@@ -83,7 +83,7 @@ ros::Publisher AR3FeedbackPub("/AR3/Feedback", &AR3FeedbackData);
 
 // Joint 1 callback
 void AR3ControlCallback(const Teensy::AR3_Control &AR3_Control_Data){
-    memcpy(SetAngles,AR3_Control_Data.joint_angles,sizeof(AR3_Control_Data.joint_angles));
+    memcpy(SetAngles,AR3_Control_Data.joint_angles,sizeof(SetAngles));
     home = AR3_Control_Data.home;
     run = AR3_Control_Data.run;
     rest = AR3_Control_Data.rest;
@@ -118,6 +118,8 @@ void setup() {
     // E-Stop pin
     pinMode(eStopPin,INPUT_PULLUP);
 
+    pinMode(joint1LIM,INPUT_PULLUP);
+
     // Ros subscribers
     nh.initNode();
     nh.subscribe(AR3ControlSub);
@@ -133,7 +135,20 @@ void loop() {
     ePinValue = digitalRead(eStopPin);
     t = micros();
 
-    if (!ePinValue && run){
+    // E-Stop state
+    if (ePinValue){
+        if ((t-t_old) > (pub_freq)){
+            AR3FeedbackData.eStop = 1;
+            AR3FeedbackData.running = 0;
+            memcpy(AR3FeedbackData.joint_angles,JointAngles,sizeof(AR3FeedbackData.joint_angles));
+            memcpy(AR3FeedbackData.setpoint_angles,SetAngles,sizeof(AR3FeedbackData.setpoint_angles));
+            AR3FeedbackPub.publish(&AR3FeedbackData);
+            t_old = t;
+        }
+    }
+
+    // Run state
+    else if (!ePinValue && run){
         AR3FeedbackData.eStop = 0;
         AR3FeedbackData.running = 1;
 
@@ -162,6 +177,7 @@ void loop() {
             moveJoint(joint2PUL,joint2DIR,&JointAngles[1],AngleErrors[1],pulse2Rev);
             t_old_accel[1] = t;
         }
+        
         //  Joint 3
         dist[2] = abs(SetAngles[2] - JointAngles[2]);
         if (dist[2] > 3.14){dist[2] = dist[2] - 3.14;}
@@ -198,11 +214,13 @@ void loop() {
         // COMMENT OUT FOR SPEED IMPROVEMENT
         if ((t-t_old) > (pub_freq)){
             memcpy(AR3FeedbackData.joint_angles,JointAngles,sizeof(AR3FeedbackData.joint_angles));
-            memcpy(AR3FeedbackData.setpoint_angles,SetAngles,sizeof(AR3FeedbackData.joint_angles));
+            memcpy(AR3FeedbackData.setpoint_angles,SetAngles,sizeof(AR3FeedbackData.setpoint_angles));
             AR3FeedbackPub.publish(&AR3FeedbackData);
             t_old = t;
         }
     }
+
+    // Homing state
     else if(!ePinValue && home){
         AR3FeedbackData.running = 0;
         AR3FeedbackData.eStop = 0;
@@ -219,18 +237,20 @@ void loop() {
 
         if ((t-t_old) > (pub_freq)){
             memcpy(AR3FeedbackData.joint_angles,JointAngles,sizeof(AR3FeedbackData.joint_angles));
-            memcpy(AR3FeedbackData.setpoint_angles,SetAngles,sizeof(AR3FeedbackData.joint_angles));
+            memcpy(AR3FeedbackData.setpoint_angles,SetAngles,sizeof(AR3FeedbackData.setpoint_angles));
             AR3FeedbackPub.publish(&AR3FeedbackData);
             t_old = t;
         }
 
     }
+
+    // No state assigned and no E-Stop
     else{
         if ((t-t_old) > (pub_freq)){
-            AR3FeedbackData.eStop = 1;
+            AR3FeedbackData.eStop = 0;
             AR3FeedbackData.running = 0;
             memcpy(AR3FeedbackData.joint_angles,JointAngles,sizeof(AR3FeedbackData.joint_angles));
-            memcpy(AR3FeedbackData.setpoint_angles,SetAngles,sizeof(AR3FeedbackData.joint_angles));
+            memcpy(AR3FeedbackData.setpoint_angles,SetAngles,sizeof(AR3FeedbackData.setpoint_angles));
             AR3FeedbackPub.publish(&AR3FeedbackData);
             t_old = t;
         }
@@ -287,5 +307,3 @@ void homeJoint(int pin, int dirPin, int dir){
     sendPulse(pin,dirPin,dir);
     delayMicroseconds(400);
 }
-
-

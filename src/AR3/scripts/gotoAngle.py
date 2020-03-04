@@ -53,7 +53,7 @@ def main(argv):
                                 robot_controller.AR3Control.rest = 0
                        
                         elif opt in ("-r"):
-                                robot_controller.AR3Control.joint_angles = [0.0,0.8,1.8,0.0,5.53,0.0]
+                                robot_controller.AR3Control.joint_angles = [0.0,1.0,1.8,0.0,5.53,0.0]
                                 robot_controller.AR3Control.home = 0
                                 robot_controller.AR3Control.run = 1
                                 robot_controller.AR3Control.rest = 0

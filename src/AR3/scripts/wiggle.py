@@ -22,11 +22,11 @@ from RobotControllerClass import RobotController
 def main():
         rospy.init_node('Joint_Control', anonymous='True')
         robot_controller = RobotController()
-        rate = rospy.Rate(10)
+        rate = rospy.Rate(5)
 
         val = 0
         scale = 1.0
-        step = 0.1
+        step = 0.02
         robot_controller.AR3Control.run = 1
         while not rospy.is_shutdown():
                 for idx in range(0,6):
@@ -34,6 +34,13 @@ def main():
                                 robot_controller.AR3Control.joint_angles[idx] = (sin(val)*scale*.625)
                         else:
                                 robot_controller.AR3Control.joint_angles[idx] = (sin(val)*scale)
+                
+                # Convert to global angle
+                for joint_idx in range(0,6):
+                    if robot_controller.AR3Control.joint_angles[joint_idx] < 0:
+                        robot_controller.AR3Control.joint_angles[joint_idx] = (2*pi) + robot_controller.AR3Control.joint_angles[joint_idx]
+                    elif robot_controller.AR3Control.joint_angles[joint_idx] >= 2*pi:
+                        robot_controller.AR3Control.joint_angles[joint_idx] = robot_controller.AR3Control.joint_angles[joint_idx] - 2*pi
                 robot_controller.send_joints()
                 val = val + step
                 rate.sleep()
