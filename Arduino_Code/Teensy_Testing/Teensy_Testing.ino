@@ -51,7 +51,7 @@ float pulse6Rev = 800.0*(19.0+(38.0/187.0)); // pulse/rev, gearbox;
 // Pulse width of the signal sent to the stepper driver. This time is in microsecons
 // and is passed to the delay_microseconds() function. Making this value larger will
 // severely affect the frequency at which the main loop runs
-int pulDelay = 50; // default is 50 for max speed
+int pulDelay = 150; // default is 50 for max speed
 
 // Joint angle variables
 float SetAngles[6] = {0.0,0.0,0.0,0.0,0.0,0.0};
@@ -85,7 +85,7 @@ int rest = 0;
 
 // Gripper positions
 Servo gripper_servo;
-int gripper_cmd = 0, closed_pos = 1, opened_pos = 80;
+int gripper_cmd = 0, closed_pos = 0, opened_pos = 80;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ROS Definitions
@@ -151,6 +151,8 @@ void loop() {
     t = micros();
     ePinValue = digitalRead(eStopPin);
     newPosition1 = Enc1.read();
+
+    // Update joint 2 angle from encoder
     if (newPosition1 != oldPosition1) {
       AR3FeedbackData.encoder_pulses[1] = int(newPosition1);
       oldPosition1 = newPosition1;
@@ -160,13 +162,14 @@ void loop() {
       if(JointAngles[1] < 0.0){JointAngles[1] = (2.0*pi) + JointAngles[1];}
     }
 
-    if (gripper_cmd == 1){
+    // Gripper operation
+    if (gripper_cmd == 0){
       gripper_servo.write(opened_pos);
-      AR3FeedbackData.gripper_closed = 1;
+      AR3FeedbackData.gripper_closed = 0;
     }
     else{
       gripper_servo.write(closed_pos);
-      AR3FeedbackData.gripper_closed = 0;
+      AR3FeedbackData.gripper_closed = 1;
     }
     
     // E-Stop state
@@ -190,7 +193,7 @@ void loop() {
         
         // Joint 1
         dist[0] = abs(edgeAngle(SetAngles[0],JointAngles[0]));
-        if (dist[0] > 3.14){dist[0] = dist[0] - 3.14;}
+//        if (dist[0] > 3.14){dist[0] = dist[0] - 3.14;}
         if(dist[0]<thresh){accelTime[0] = pow((1.0/dist[0]),2.0);}
         else{accelTime[0] = 0.0;}
 
@@ -202,7 +205,7 @@ void loop() {
 
         // Joint 2
         dist[1] = abs(edgeAngle(SetAngles[1],JointAngles[1]));
-        if (dist[1] > 3.14){dist[1] = dist[1] - 3.14;}
+//        if (dist[1] > 3.14){dist[1] = dist[1] - 3.14;}
         if(dist[1]<thresh){accelTime[1] = pow((1.0/dist[1]),2.0);}
         else{accelTime[1] = 0.0;}
     
@@ -214,7 +217,7 @@ void loop() {
         
         //  Joint 3
         dist[2] = abs(edgeAngle(SetAngles[2],JointAngles[2]));
-        if (dist[2] > 3.14){dist[2] = dist[2] - 3.14;}
+//        if (dist[2] > 3.14){dist[2] = dist[2] - 3.14;}
         if(dist[2]<thresh){accelTime[2] = pow((1.0/dist[2]),2.0);}
         else{accelTime[2] = 0.0;}
 
@@ -230,7 +233,7 @@ void loop() {
 
         //  Joint 5
         dist[4] = abs(edgeAngle(SetAngles[4],JointAngles[4]));
-        if (dist[4] > 3.14){dist[4] = dist[4] - 3.14;}
+//        if (dist[4] > 3.14){dist[4] = dist[4] - 3.14;}
         if(dist[4]<thresh){accelTime[4] = pow((1.0/dist[4]),2.0);}
         else{accelTime[4] = 0.0;}
 

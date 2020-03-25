@@ -34,12 +34,12 @@ def main():
         # angles_j5 = [0.0, pi/3.0, 0.0, 5.0*pi/3.0]
         # angles_j6 = [0.0, pi/2.0, 0.0, 3.0*pi/2.0]
 
-        angles_j1 = [0.0, pi/2.0]
-        angles_j2 = [0.0, pi/6.0]
-        angles_j3 = [0.0, pi/2.0]
-        angles_j4 = [0.0, pi/2.0]
-        angles_j5 = [0.0, pi/3.0]
-        angles_j6 = [0.0, pi/2.0]
+        angles_j1 = [0.0, pi/2.0, 0.0]
+        angles_j2 = [0.0, pi/6.0, 0.0]
+        angles_j3 = [0.0, pi/2.0, 0.0]
+        angles_j4 = [0.0, pi/2.0, 0.0]
+        angles_j5 = [0.0, pi/3.0, 0.0]
+        angles_j6 = [0.0, pi/2.0, 0.0]
 
         angleIdx = 0
         set_angles = [angles_j1[angleIdx],angles_j2[angleIdx],angles_j3[angleIdx],angles_j4[angleIdx],angles_j5[angleIdx],angles_j6[angleIdx]]
@@ -47,9 +47,9 @@ def main():
         while not rospy.is_shutdown():
                 robot_controller.AR3Feedback.joint_angles = list(robot_controller.AR3Feedback.joint_angles)
 
-                if angle_check(set_angles,robot_controller.AR3Feedback.joint_angles,0.0005) and (angleIdx+1 < len(angles_j2)):
+                if angle_check(set_angles,robot_controller.AR3Feedback.joint_angles,0.05) and (angleIdx+1 < len(angles_j2)):
                         angleIdx = angleIdx + 1   
-                elif ((angleIdx == (len(angles_j2)-1)) and angle_check(set_angles,robot_controller.AR3Feedback.joint_angles,0.0005)):
+                elif ((angleIdx == (len(angles_j2)-1)) and angle_check(set_angles,robot_controller.AR3Feedback.joint_angles,0.05)):
                         angleIdx = 0
                 
                 set_angles = [angles_j1[angleIdx],angles_j2[angleIdx],angles_j3[angleIdx],angles_j4[angleIdx],angles_j5[angleIdx],angles_j6[angleIdx]]

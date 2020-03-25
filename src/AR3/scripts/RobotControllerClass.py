@@ -33,4 +33,5 @@ class RobotController(object):
     def clc(self):
         print('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n')
         print('AR3@Controller:$ '),
+
     
