@@ -148,6 +148,7 @@ void setup() {
 //  Main Loop
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void loop() {
+    // Runtime parameters
     t = micros();
     ePinValue = digitalRead(eStopPin);
     newPosition1 = Enc1.read();
@@ -171,6 +172,10 @@ void loop() {
       gripper_servo.write(closed_pos);
       AR3FeedbackData.gripper_closed = 1;
     }
+
+    /////////////////////////////////////////////
+    //  State machine
+    /////////////////////////////////////////////
     
     // E-Stop state
     if (ePinValue){
@@ -362,6 +367,7 @@ void homeJoint(int pin, int dirPin, int dir){
     delayMicroseconds(400);
 }
 
+// Copys the contents of array 'local' into array 'ros'
 void arry_cpy(float ros[], float local[], int len) {
   for(int i=0; i<len; i++) {
     ros[i] = local[i];
