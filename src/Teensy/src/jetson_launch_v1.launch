@@ -1,0 +1,9 @@
+<launch>
+	<node name="teensy_out" pkg="rosserial_python" type="serial_node.py" output="screen">
+	<param name="port" value="/dev/ttyACM0" />
+	<param name="baud" value="57600" />
+	</node>
+
+	<node name="teensy_interpreter" pkg="Teensy" type="TestInterClass.py">
+	</node>	
+</launch>
