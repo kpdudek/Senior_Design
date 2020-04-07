@@ -8,7 +8,7 @@ from math import pi
 import numpy as np
 from std_msgs.msg import Float64
 import sys
-from RobotControllerClass import RobotController
+from RobotControllerClass_Ethan import RobotController
 
 
 class JoyController(RobotController):
