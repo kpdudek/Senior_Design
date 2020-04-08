@@ -37,7 +37,7 @@
 float pi = 3.1415926;
 
 // Varables used to store time both current and 'stopwatch' times
-unsigned long int t_old=0, t=0, pub_freq = 1000000;
+unsigned long int t_old=0, t=0, pub_freq = 10000000;
 
 // Number of pulses to rotate a joint 2*PI radians. Accounts for settings on the stepper driver and
 // all mechanical ratios. Inline comments denote the parameters used in the calculation.
@@ -51,7 +51,7 @@ float pulse6Rev = 800.0*(19.0+(38.0/187.0)); // pulse/rev, gearbox;
 // Pulse width of the signal sent to the stepper driver. This time is in microsecons
 // and is passed to the delay_microseconds() function. Making this value larger will
 // severely affect the frequency at which the main loop runs
-int pulDelay = 150; // default is 50 for max speed
+int pulDelay = 50; // default is 50 for max speed
 
 // Joint angle variables
 float SetAngles[6] = {0.0,0.0,0.0,0.0,0.0,0.0};
@@ -72,7 +72,7 @@ float angleTol = 0.0005;
 float dist[6] = {0.0,0.0,0.0,0.0,0.0,0.0};
 float accelTime[6] = {0.0,0.0,0.0,0.0,0.0,0.0};
 float t_old_accel[6] = {0.0,0.0,0.0,0.0,0.0,0.0};
-float ka = 800.0, thresh = 1.57;
+float ka = 800.0, thresh = 0.785;
 
 // Current state of the e-stop pin. Default is True meaning no movements will not occur
 int ePinValue = 1;

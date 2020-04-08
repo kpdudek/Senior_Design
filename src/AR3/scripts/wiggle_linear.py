@@ -21,7 +21,7 @@ from RobotControllerClass import RobotController
 
 def main():
         rospy.init_node('Joint_Control', anonymous='True')
-        rate = rospy.Rate(10)
+        rate = rospy.Rate(1)
 
         scale = 1.0
         step = 50
