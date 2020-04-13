@@ -18,9 +18,10 @@ def check_rob(data):
     rob_there = True
 
     c = 0
-    for ang in data.joint_angles:
+    for ang in list(data.joint_angles):
         if ang <= 0.95*control.joint_angles[c] or ang >= 1.05*control.joint_angles[c]:
             rob_there = False
+		c = c + 1
 
 
 def main(argv):
