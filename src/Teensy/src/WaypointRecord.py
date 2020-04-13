@@ -20,34 +20,53 @@ from JoyControlClass import JoyController
 
 def angles(data):
     global curr_angles
-    curr_angles = data.joint_angles 
+    curr_angles = data.joint_angles
+
+def store_curr(data):
+    global curr_angles
+    global robot_controller
+    global counter
+    
+    robot_controller.joy_callback(data)
+    
+    if robot_controller.A == 1:
+        counter = counter + 1
+        
+    if counter%2 == 0
+        #Record Feature 
+        date = datetime.now()
+        strDate = date.strftime("%m_%d_%y_%H:%M:%S")
+        f = open("record_"+strDate+".txt",'w')
+    else:
+        try:
+            f.close()
+
+    if robot_controller.B == 1:
+        #Record Write
+        f.write(str(curr_angles)+"\n")
+
 
 def main():
     global curr_angles
+    global robot_controller
+    global counter
 
     rospy.init_node('Recorder', anonymous='True')
 
     robot_controller = JoyController()
 
-    xbox = rospy.Subscriber('/joy', Joy, robot_controller.joy_callback)
+    xbox = rospy.Subscriber('/joy', Joy, store_curr)
     j_angles = rospy.Subscriber('/AR3/Control',AR3_Control,angles)
-    rate = rospy.Rate(60)
+    rate = rospy.Rate(30)
 
-    while not rospy.is_shutdown():   
-        
-        if robot_controller.A == 1:
-            #Record Feature 
-            date = datetime.now()
-            strDate = date.strftime("%m_%d_%y_%H:%M:%S")
-            f = open("record_"+strDate+".txt",'w')
-    
-            while robot_controller.A == 1:
-                if robot_controller.B == 1:
-                    #Record Write
-                    f.write(str(curr_angles)+"\n")
-                rate.sleep()
-            f.close()
+    counter = 1
+
+    while not rospy.is_shutdown():
         rate.sleep()
+        
+
+                
+            
 
 if __name__ == "__main__":
     main()
