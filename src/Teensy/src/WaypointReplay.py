@@ -12,8 +12,10 @@ from Teensy.msg import AR3_Control
 from AR3.msg import AR3_Feedback
 
 def check_rob(data):
-    global rob_there = True
+    global rob_there
     global control
+
+    rob_there = True
 
     c = 0
     for ang in data.joint_angles:
@@ -22,17 +24,18 @@ def check_rob(data):
 
 
 def main(argv):
-    global rob_there
+	global rob_there
+	global control
     
-	rospy.init_node('Waypoint Replay', anonymous='True')
+	rospy.init_node('Waypoint_Replay', anonymous='True')
 
 	j_pub = rospy.Publisher(
 	    '/AR3/Control', AR3_Control, queue_size=1)
 
-    j_sub = rospy.Subscriber(
-        '/AR3/Feedback',AR3_Feedback,check_rob)
+	j_sub = rospy.Subscriber(
+		'/AR3/Feedback',AR3_Feedback,check_rob)
 	
-    global control = AR3_Control()
+	control = AR3_Control()
 
 	rate = rospy.Rate(30)
 
@@ -62,11 +65,11 @@ def main(argv):
 		#Replay Feature
 		control.joint_angles = list(eval(line))
 		
-        j_pub.publish(control.joint_angles)
+		j_pub.publish(control.joint_angles)
 		rob_there = False
 
-        while rob_there == False:
-            rate.sleep()
+		while rob_there == False:
+			rate.sleep()
 		
 		rate.sleep()
 

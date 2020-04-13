@@ -19,7 +19,8 @@ from RobotControllerClass import RobotController
 from JoyControlClass import JoyController
 
 def angles(data):
-    global curr_angles = data.joint_angles 
+    global curr_angles
+    curr_angles = data.joint_angles 
 
 def main():
     global curr_angles
@@ -29,7 +30,7 @@ def main():
     robot_controller = JoyController()
 
     xbox = rospy.Subscriber('/joy', Joy, robot_controller.joy_callback)
-    angles = rospy.Subscriber('/AR3/Control',AR3_Control,angles)
+    j_angles = rospy.Subscriber('/AR3/Control',AR3_Control,angles)
     rate = rospy.Rate(60)
 
     while not rospy.is_shutdown():   
