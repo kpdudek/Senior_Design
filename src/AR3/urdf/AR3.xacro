@@ -4,10 +4,10 @@
 
   <!-- Constants for robot dimensions -->
   <xacro:property name="PI" value="3.1415926535897931"/>
-  <xacro:property name="mass" value="1.5" /> 
+  <xacro:property name="mass" value="1.2" /> 
   <xacro:property name="width" value="0.1" /> 
   <xacro:property name="height1" value=".1397" /> 
-  <xacro:property name="height2" value="0.306" /> 
+  <xacro:property name="height2" value="0.206" /> 
   <xacro:property name="height3" value="0.227" /> 
   <xacro:property name="height4" value="0.1" /> 
 
