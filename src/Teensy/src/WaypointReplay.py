@@ -19,7 +19,7 @@ def check_rob(data):
 
     c = 0
     for ang in list(data.joint_angles):
-        if ang <= 0.75*control.joint_angles[c] or ang >= 1.25*control.joint_angles[c]:
+        if ang <= 0.85*control.joint_angles[c] or ang >= 1.15*control.joint_angles[c]:
             rob_there = False
         c = c + 1
 
@@ -32,7 +32,7 @@ def main(argv):
     j_pub = rospy.Publisher('/AR3/Control', AR3_Control, queue_size=1)
     j_sub = rospy.Subscriber('/AR3/Feedback',AR3_Feedback,check_rob)
     control = AR3_Control()
-    rate = rospy.Rate(30)
+    rate = rospy.Rate(15)
 
     try:
         opts, args = getopt.getopt(argv, "hf:")
@@ -66,7 +66,8 @@ def main(argv):
         while rob_there == False:
             j_pub.publish(control)
             rate.sleep()
-            rate.sleep()
+        
+        rate.sleep()
         waypoint += 1
 
     f.close()

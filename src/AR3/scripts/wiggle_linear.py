@@ -21,9 +21,9 @@ from RobotControllerClass import RobotController
 
 def main():
         rospy.init_node('Joint_Control', anonymous='True')
-        rate = rospy.Rate(1)
+        rate = rospy.Rate(15)
 
-        scale = 1.0
+        scale = 1.5
         step = 50
         angles_upper = np.linspace(0.0,scale,step)
         angles_lower = np.linspace((2.0*pi)-scale,2*pi,step)

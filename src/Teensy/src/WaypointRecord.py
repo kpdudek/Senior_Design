@@ -39,7 +39,7 @@ def store_curr(data):
         date = datetime.now()
         strDate = date.strftime("%m_%d_%y_%H:%M:%S")
         name = pwd.getpwuid( os.getuid() ).pw_name
-        file_path = '/home/%s/Senior_Design/src/Teensy/record_%s.txt'%(name,strDate)
+        file_path = '/home/%s/Senior_Design/src/Teensy/records/record_%s.txt'%(name,strDate)
         f = open(file_path,'w')
         print('Opened file with status: {}'.format(f))
     elif robot_controller.A == 1 and counter%2 != 0:

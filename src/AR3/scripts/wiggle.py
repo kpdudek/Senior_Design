@@ -22,7 +22,7 @@ from RobotControllerClass import RobotController
 def main():
         rospy.init_node('Joint_Control', anonymous='True')
         robot_controller = RobotController()
-        rate = rospy.Rate(5)
+        rate = rospy.Rate(30)
 
         val = 0
         scale = 1.0
