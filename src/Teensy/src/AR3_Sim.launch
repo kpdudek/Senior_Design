@@ -1,0 +1,13 @@
+<launch>
+
+    <include file="$(find rrbot_gazebo)/launch/AR3_Pedestal.launch" />
+    <include file="$(find rrbot_control)/launch/AR3.launch" />
+
+	<node name="joy_node" pkg="joy" type="joy_node" output="screen">
+	<param name="deadzone" value="0.2" />
+	</node>
+
+	<node name="AR3_Interpreter" pkg="sim_control" type="AR3_to_Gazebo.py" />
+    <node name="AR3_Feedback" pkg="sim_control" type="Sim_AR3_Feedback.py" />
+    
+</launch>

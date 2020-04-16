@@ -22,8 +22,6 @@ def main():
     rospy.init_node('Joy_Control', anonymous='True')
 
     robot_controller = JoyController()
-
-    xbox = rospy.Subscriber('/joy', Joy, robot_controller.joy_callback)
     rate = rospy.Rate(60)
 
     robot_controller.set_controller_to_AR3()

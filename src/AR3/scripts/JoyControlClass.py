@@ -9,11 +9,14 @@ import numpy as np
 from std_msgs.msg import Float64
 import sys
 from RobotControllerClass import RobotController
+from sensor_msgs.msg import Joy
 
 
 class JoyController(RobotController):
     def __init__(self):
         super(JoyController,self).__init__()
+
+        xbox = rospy.Subscriber('/joy', Joy, self.joy_callback)
 
         # Motion parameters
         self.joint_idx = 0
