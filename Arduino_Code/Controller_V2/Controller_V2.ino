@@ -8,8 +8,8 @@
 ////////////////////////////////
 // Pin Definitions
 ////////////////////////////////
-#define Enc1_Pin1 2 // encoder1 CLK pin
-#define Enc1_Pin2 3  // encoder1 DT pin
+#define Enc1_Pin1 0 // encoder1 CLK pin
+#define Enc1_Pin2 1  // encoder1 DT pin
 
 Encoder Enc1(Enc1_Pin1, Enc1_Pin2);
 
@@ -18,13 +18,13 @@ Encoder Enc1(Enc1_Pin1, Enc1_Pin2);
 
 Encoder Enc2(Enc2_Pin1, Enc2_Pin2);
 
-#define Enc3_Pin1 6 // encoder3 CLK pin
-#define Enc3_Pin2 7  // encoder3 DT pin
+#define Enc3_Pin1 2 // encoder3 CLK pin
+#define Enc3_Pin2 3  // encoder3 DT pin
 
 Encoder Enc3(Enc3_Pin1, Enc3_Pin2);
 
-#define Enc4_Pin1 8 // encoder4 CLK pin
-#define Enc4_Pin2 9  // encoder4 DT pin
+#define Enc4_Pin1 6 // encoder4 CLK pin
+#define Enc4_Pin2 7  // encoder4 DT pin
 
 Encoder Enc4(Enc4_Pin1, Enc4_Pin2);
 
