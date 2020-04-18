@@ -79,6 +79,7 @@ def main():
     counter = 1
     counter_prev = 1
 
+    print('A: open/close robot path file\nB: Store configuration')
     while not rospy.is_shutdown():
         rate.sleep()
         
