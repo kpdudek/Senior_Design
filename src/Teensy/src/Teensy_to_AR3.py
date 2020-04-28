@@ -17,7 +17,7 @@ def pulseCallback(data):
   jointAngles.joint_angles = list(jointAngles.joint_angles)
   for i in range(0,6):
     if i == 0:
-      jointAngles.joint_angles[i] = -(data.pulses[i] / 2400.0) * (2.0 * pi)
+      jointAngles.joint_angles[i] = (data.pulses[i] / 2400.0) * (2.0 * pi)
     else:
       jointAngles.joint_angles[i] = (data.pulses[i] / 2400.0) * (2.0 * pi)
 

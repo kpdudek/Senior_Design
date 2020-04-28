@@ -53,6 +53,7 @@ def main(argv):
     j_sub = rospy.Subscriber('/AR3/Feedback',AR3_Feedback,check_rob)
     control = AR3_Control()
     rate = rospy.Rate(7)
+    control.run = 1
 
     try:
         opts, args = getopt.getopt(argv, "hf:")

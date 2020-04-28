@@ -39,7 +39,14 @@ def store_curr(data):
         date = datetime.now()
         strDate = date.strftime("%m_%d_%y_%H:%M:%S")
         name = pwd.getpwuid( os.getuid() ).pw_name
-        file_path = '/home/%s/Senior_Design/src/Teensy/records/record_%s.txt'%(name,strDate)
+
+        file_name = raw_input('Enter a file name (without extension) or hit enter to use the current time: ')
+
+        if len(name) == 0:
+            file_path = '/home/%s/Senior_Design/src/Teensy/records/record_%s.txt'%(name,strDate)
+        else:
+            file_path = '/home/%s/Senior_Design/src/Teensy/records/%s.txt'%(name,file_name)
+        
         f = open(file_path,'w')
         print('Opened file with status: {}'.format(f))
     elif robot_controller.A == 1 and counter%2 != 0:

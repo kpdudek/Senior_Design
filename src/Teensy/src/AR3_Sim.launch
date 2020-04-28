@@ -1,6 +1,8 @@
 <launch>
 
-    <include file="$(find rrbot_gazebo)/launch/AR3_Pedestal.launch" />
+    <!-- <include file="$(find rrbot_gazebo)/launch/AR3.launch" />
+    <include file="$(find rrbot_gazebo)/launch/AR3_Pedestal.launch" /> -->
+    <include file="$(find rrbot_gazebo)/launch/AR3_Shelving.launch" />
     <include file="$(find rrbot_control)/launch/AR3.launch" />
 
 	<node name="joy_node" pkg="joy" type="joy_node" output="screen">
