@@ -29,13 +29,17 @@ class JoyController(RobotController):
         self.A = 0
         self.Y = 0
         self.X = 0
+        self.RBmp = 0
+        self.LBmp = 0
+        self.power = 0
     
     def set_controller_to_AR3(self):
         t = time.time()
         t_old = time.time()
-        while (t-t_old) < 3:
-            self.AR3Control.joint_angles = self.AR3Feedback.joint_angles
-            t = time.time()
+        # while (t-t_old) < 3:
+        #     self.AR3Control.joint_angles = self.AR3Feedback.joint_angles
+        #     t = time.time()
+        self.AR3Control.joint_angles = self.AR3Feedback.joint_angles
         self.print_control()
 
     def home(self):
@@ -51,6 +55,9 @@ class JoyController(RobotController):
         self.B = data.buttons[1]
         self.Y = data.buttons[3]
         self.X = data.buttons[2]
+        self.LBmp = data.buttons[4]
+        self.RBmp = data.buttons[5]
+        self.power = data.buttons[8]
 
         self.left_stick_val = -1.0 * data.axes[0]
         self.left_stick_press = data.buttons[9]
@@ -60,17 +67,31 @@ class JoyController(RobotController):
             self.joint_idx += 1
             if self.joint_idx > 5:
                 self.joint_idx = 0
-            self.print_control()
+            # self.print_control()
+
         elif self.B == 1:
             self.joint_idx -= 1
             if self.joint_idx < 0:
                 self.joint_idx = 5
-            self.print_control()
+            # self.print_control()
 
         if self.Y == 1:
             self.home()
+        
         elif self.X == 1:
             self.rest()
+
+        elif self.LBmp == 1:
+            self.AR3Control.close_gripper = 0
+        
+        elif self.RBmp == 1:
+            self.AR3Control.close_gripper = 1
+
+        elif self.power == 1:
+            if self.AR3Control.run == 0:
+                self.AR3Control.run = 1
+            else:
+                self.AR3Control.run = 0
 
 
     def stick_move(self):
@@ -87,3 +108,4 @@ class JoyController(RobotController):
     def print_control(self):
         self.clc()
         print('Moving joint: [{}]'.format(self.joint_idx+1))
+        print('Control Enabled: {}'.format(self.AR3Control.run))

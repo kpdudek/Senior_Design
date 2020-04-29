@@ -25,10 +25,11 @@ def main():
     rate = rospy.Rate(60)
 
     robot_controller.set_controller_to_AR3()
-    robot_controller.AR3Control.run = 1
-    while not rospy.is_shutdown():   
-        robot_controller.stick_move()
+    while not rospy.is_shutdown():
+        if robot_controller.AR3Control.run == 1:   
+            robot_controller.stick_move()
         robot_controller.send_joints()
+        robot_controller.print_control()
         rate.sleep()
 
 if __name__ == "__main__":

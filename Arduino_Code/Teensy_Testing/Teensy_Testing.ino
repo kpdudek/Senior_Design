@@ -37,7 +37,7 @@
 float pi = 3.1415926;
 
 // Varables used to store time both current and 'stopwatch' times
-unsigned long int t_old=0, t=0, pub_freq = 10000000;
+unsigned long int t_old=0, t=0, pub_freq = 2000000;
 
 // Number of pulses to rotate a joint 2*PI radians. Accounts for settings on the stepper driver and
 // all mechanical ratios. Inline comments denote the parameters used in the calculation.

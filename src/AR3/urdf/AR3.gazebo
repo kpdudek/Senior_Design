@@ -11,7 +11,12 @@
 
   <!-- Stand -->
   <gazebo reference="stand">
-    <material>Gazebo/Black</material>
+    <material>Gazebo/DarkGrey</material>
+  </gazebo>
+  
+  <!-- Stand -->
+  <gazebo reference="shelving">
+    <material>Gazebo/White</material>
   </gazebo>
 
   <!-- Base -->

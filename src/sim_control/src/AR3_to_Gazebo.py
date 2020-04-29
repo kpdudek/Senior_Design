@@ -27,6 +27,7 @@ class Interpreter(object):
         self.joint4 = Float64()
         self.joint5 = Float64()
         self.joint6 = Float64()
+        self.AR3_Control = AR3_Control()
         
         self.j1_pub = rospy.Publisher('/rrbot/joint1_position_controller/command', Float64, queue_size = 1)
         self.j2_pub = rospy.Publisher('/rrbot/joint2_position_controller/command', Float64, queue_size = 1)
@@ -38,9 +39,10 @@ class Interpreter(object):
         self.AR3ControlSub = rospy.Subscriber('/AR3/Control', AR3_Control, self.AR3ControlCallback)
     
     def AR3ControlCallback(self,data):
+        self.AR3_Control = data
         data.joint_angles = list(data.joint_angles)
         
-        self.joint1.data = data.joint_angles[0]
+        self.joint1.data = -1*data.joint_angles[0]
         self.joint2.data = data.joint_angles[1]
         self.joint3.data = data.joint_angles[2]
         self.joint4.data = data.joint_angles[3]
@@ -61,7 +63,8 @@ def main():
 
         interpreter = Interpreter()
         while not rospy.is_shutdown():
-            interpreter.send_joints()
+            if interpreter.AR3_Control.run == 1:
+                interpreter.send_joints()
             rate.sleep()
                 
 
