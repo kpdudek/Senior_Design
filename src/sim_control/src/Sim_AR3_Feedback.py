@@ -35,8 +35,8 @@ class SimulatedAR3Feedback(object):
         self.j6_sub = rospy.Subscriber('/rrbot/joint6_position_controller/state', JointControllerState, self.joint6_callback)
 
     def joint1_callback(self,data):
-        self.AR3_Feedback.joint_angles[0] = data.set_point + data.error
-        self.AR3_Feedback.setpoint_angles[0] = data.set_point
+        self.AR3_Feedback.joint_angles[0] = -1*(data.set_point + data.error)
+        self.AR3_Feedback.setpoint_angles[0] = -1*(data.set_point)
 
     def joint2_callback(self,data):
         self.AR3_Feedback.joint_angles[1] = data.set_point + data.error

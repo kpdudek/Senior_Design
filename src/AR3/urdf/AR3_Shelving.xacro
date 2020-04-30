@@ -89,7 +89,7 @@
  <joint name="shelving_to_world" type="fixed">
     <parent link="world"/>
     <child link="shelving"/>
-    <origin xyz="0 .25 0" rpy="0 0 3.14"/>
+    <origin xyz=".1 .25 0" rpy="0 0 3.14"/>
     <axis xyz="0 0 1"/>
     <dynamics damping="0.7"/>
   </joint>

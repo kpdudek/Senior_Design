@@ -36,10 +36,10 @@ class JoyController(RobotController):
     def set_controller_to_AR3(self):
         t = time.time()
         t_old = time.time()
-        # while (t-t_old) < 3:
-        #     self.AR3Control.joint_angles = self.AR3Feedback.joint_angles
-        #     t = time.time()
-        self.AR3Control.joint_angles = self.AR3Feedback.joint_angles
+        while (t-t_old) < 1:
+            self.AR3Control.joint_angles = list(self.AR3Feedback.setpoint_angles)
+            t = time.time()
+        self.AR3Control.joint_angles = list(self.AR3Feedback.setpoint_angles)
         self.print_control()
 
     def home(self):
